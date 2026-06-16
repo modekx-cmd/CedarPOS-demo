@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CedarPOS — The POS Built for Lebanese Business</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#060b18;
+  --bg2:#0a1020;
+  --bg3:#0f1829;
+  --card:#0d1630;
+  --border:rgba(255,255,255,0.07);
+  --cyan:#00d4b8;
+  --cyan2:#00b39f;
+  --cyan-dim:rgba(0,212,184,0.08);
+  --cyan-glow:rgba(0,212,184,0.15);
+  --text:#f0f4f8;
+  --muted:#8892a4;
+  --dim:#4a5568;
+  --red:#ff5f57;
+  --yellow:#febc2e;
+  --green:#28c840;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden;line-height:1.6}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(6,11,24,0.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:0 48px;height:60px;display:flex;align-items:center;justify-content:space-between}
+.nav-logo{font-size:18px;font-weight:800;color:#fff}.nav-logo span{color:var(--cyan)}
+.nav-links{display:flex;gap:28px}.nav-links a{color:var(--muted);font-size:13px;font-weight:500;text-decoration:none;transition:color .2s}.nav-links a:hover{color:#fff}
+.nav-cta{background:var(--cyan);color:#060b18;font-size:13px;font-weight:700;padding:8px 20px;border-radius:8px;border:none;cursor:pointer}
+
+/* HERO */
+.hero{padding:120px 48px 80px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:800px;height:400px;background:radial-gradient(ellipse at center,rgba(0,212,184,0.08) 0%,transparent 70%);pointer-events:none}
+.hero-badge{display:inline-flex;align-items:center;gap:8px;background:var(--cyan-dim);border:1px solid rgba(0,212,184,0.25);color:var(--cyan);font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;padding:6px 16px;border-radius:20px;margin-bottom:24px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:var(--cyan);animation:blink 1.8s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.2}}
+h1{font-size:64px;font-weight:900;line-height:1.08;letter-spacing:-0.03em;margin-bottom:20px;max-width:800px;margin-left:auto;margin-right:auto}
+h1 em{font-style:normal;color:var(--cyan)}
+.hero-sub{font-size:18px;color:var(--muted);max-width:560px;margin:0 auto 36px;line-height:1.7}
+.hero-btns{display:flex;gap:12px;justify-content:center;margin-bottom:48px}
+.btn-p{background:var(--cyan);color:#060b18;font-size:15px;font-weight:700;padding:14px 32px;border-radius:10px;border:none;cursor:pointer;transition:opacity .2s}
+.btn-p:hover{opacity:0.88}
+.btn-s{background:transparent;color:#fff;font-size:15px;font-weight:500;padding:14px 28px;border-radius:10px;border:1px solid rgba(255,255,255,0.15);cursor:pointer;transition:border-color .2s}
+.btn-s:hover{border-color:rgba(255,255,255,0.35)}
+.hero-pills{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.pill{background:rgba(255,255,255,0.04);border:1px solid var(--border);color:#c8d0dc;font-size:12px;font-weight:500;padding:6px 14px;border-radius:20px}
+
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--bg2)}
+.stat-item{padding:28px;text-align:center;border-right:1px solid var(--border)}
+.stat-item:last-child{border-right:none}
+.stat-num{font-size:32px;font-weight:900;color:var(--cyan);letter-spacing:-0.02em}
+.stat-lbl{font-size:12px;color:var(--muted);margin-top:4px}
+
+/* DEMO SECTION */
+.demo-section{padding:80px 48px;background:var(--bg)}
+.section-label{font-size:11px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:var(--cyan);margin-bottom:12px}
+.section-title{font-size:36px;font-weight:800;letter-spacing:-0.02em;margin-bottom:8px}
+.section-sub{font-size:15px;color:var(--muted);margin-bottom:40px}
+
+/* LIVE DEMO APP */
+.demo-frame{background:var(--bg3);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 40px 80px rgba(0,0,0,0.5)}
+.demo-titlebar{background:#040810;padding:12px 16px;display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.tlbtn{width:12px;height:12px;border-radius:50%}
+.demo-title-text{font-size:11px;color:var(--dim);margin:0 auto;font-family:'IBM Plex Mono',monospace}
+.demo-app{display:grid;grid-template-columns:180px 1fr 220px;height:520px}
+
+/* SIDEBAR */
+.d-sidebar{background:#040912;border-right:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.d-logo-area{padding:16px;border-bottom:1px solid var(--border)}
+.d-logo{font-size:14px;font-weight:800;color:#fff}
+.d-branch{font-size:9px;color:var(--cyan);letter-spacing:0.08em;margin-top:1px}
+.d-mode{display:inline-block;font-size:8px;background:var(--cyan-dim);border:1px solid rgba(0,212,184,0.2);color:var(--cyan);padding:2px 8px;border-radius:4px;margin-top:4px}
+.d-nav{flex:1;padding:8px 0;overflow-y:auto}
+.d-nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:11px;color:var(--dim);cursor:pointer;transition:all .15s;border-left:2px solid transparent}
+.d-nav-item:hover{color:var(--muted);background:rgba(255,255,255,0.02)}
+.d-nav-item.active{color:var(--cyan);background:var(--cyan-dim);border-left-color:var(--cyan)}
+.d-nav-item svg{width:14px;height:14px;flex-shrink:0}
+.d-logout{padding:12px 16px;border-top:1px solid var(--border)}
+.d-logout-btn{width:100%;background:rgba(255,95,87,0.08);border:1px solid rgba(255,95,87,0.2);color:#ff5f57;font-size:10px;font-weight:600;padding:7px;border-radius:7px;cursor:pointer}
+
+/* MAIN AREA */
+.d-main{display:flex;flex-direction:column;overflow:hidden}
+.d-topbar{padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;background:var(--bg3)}
+.d-view-tabs{display:flex;gap:4px}
+.d-vtab{font-size:9px;padding:5px 12px;border-radius:6px;border:1px solid var(--border);color:var(--dim);background:transparent;cursor:pointer;transition:all .15s}
+.d-vtab.active{background:var(--cyan);color:#060b18;border-color:var(--cyan);font-weight:700}
+.d-scan-bar{flex:1;background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:6px 12px;display:flex;align-items:center;gap:8px;margin-left:8px;cursor:text}
+.d-scan-icon{color:var(--cyan);font-size:12px;font-family:'IBM Plex Mono',monospace;font-weight:500}
+.d-scan-text{font-size:9px;color:var(--dim)}
+.d-scan-badge{font-size:8px;color:var(--dim);margin-left:auto;font-family:'IBM Plex Mono',monospace}
+.d-content{flex:1;padding:14px;overflow-y:auto}
+.d-content-title{font-size:11px;font-weight:600;color:var(--muted);margin-bottom:12px;letter-spacing:0.04em}
+
+/* PAGES */
+.page{display:none}.page.active{display:block}
+
+/* POS page */
+.cat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.cat-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px 10px;text-align:center;cursor:pointer;transition:all .2s}
+.cat-card:hover,.cat-card.selected{border-color:rgba(0,212,184,0.4);background:var(--cyan-dim)}
+.cat-card-icon{font-size:20px;margin-bottom:6px;color:var(--cyan);font-family:'IBM Plex Mono',monospace}
+.cat-card-name{font-size:10px;font-weight:700;color:var(--text)}
+.cat-card-count{font-size:8px;color:var(--dim);margin-top:2px}
+
+/* Products grid */
+.prod-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.prod-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;cursor:pointer;transition:all .2s;position:relative}
+.prod-card:hover{border-color:rgba(0,212,184,0.4);background:var(--cyan-dim)}
+.prod-name{font-size:10px;font-weight:700;color:var(--text);margin-bottom:4px}
+.prod-price{font-size:13px;font-weight:800;color:var(--cyan)}
+.prod-lbp{font-size:8px;color:var(--dim)}
+.prod-stock{position:absolute;top:8px;right:8px;font-size:7px;background:rgba(40,200,64,0.12);color:#28c840;padding:2px 6px;border-radius:4px;font-weight:600}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:10px;color:var(--muted);margin-bottom:12px;cursor:pointer;background:none;border:none;padding:0}
+.back-btn:hover{color:#fff}
+
+/* Dashboard page */
+.dash-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:14px}
+.dash-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.dash-card-label{font-size:9px;color:var(--muted);margin-bottom:4px}
+.dash-card-val{font-size:18px;font-weight:800;color:var(--cyan)}
+.dash-card-sub{font-size:8px;color:var(--dim);margin-top:2px}
+.chart-area{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:14px}
+.chart-title{font-size:9px;font-weight:600;color:var(--muted);margin-bottom:10px}
+.chart-bars{display:flex;align-items:flex-end;gap:6px;height:80px}
+.bar{background:var(--cyan-dim);border:1px solid rgba(0,212,184,0.2);border-radius:4px 4px 0 0;flex:1;transition:height .3s;cursor:pointer;position:relative}
+.bar:hover{background:rgba(0,212,184,0.2)}
+.bar-label{font-size:7px;color:var(--dim);text-align:center;margin-top:4px}
+
+/* Inventory page */
+.inv-header-row{display:grid;grid-template-columns:1fr auto;gap:8px;margin-bottom:10px}
+.inv-search{background:var(--card);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:9px;color:var(--text);width:100%;outline:none}
+.inv-search::placeholder{color:var(--dim)}
+.add-btn{background:var(--cyan);color:#060b18;font-size:9px;font-weight:700;padding:6px 12px;border-radius:7px;border:none;cursor:pointer;white-space:nowrap}
+.inv-table{width:100%;border-collapse:collapse}
+.inv-th{font-size:8px;color:var(--dim);padding:6px 8px;text-align:left;border-bottom:1px solid var(--border);font-weight:600;letter-spacing:0.04em;text-transform:uppercase}
+.inv-td{font-size:9px;color:var(--text);padding:7px 8px;border-bottom:1px solid rgba(255,255,255,0.03)}
+.inv-td.price{color:var(--cyan);font-weight:700}
+.inv-td.lbp{color:var(--dim);font-size:8px}
+.stock-badge{font-size:7px;padding:2px 6px;border-radius:4px;font-weight:700}
+.in-stock{background:rgba(40,200,64,0.1);color:#28c840}
+.low-stock{background:rgba(254,188,46,0.1);color:#febc2e}
+
+/* Customers page */
+.cust-list{display:flex;flex-direction:column;gap:6px}
+.cust-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.cust-name{font-size:11px;font-weight:700;color:var(--text)}
+.cust-phone{font-size:9px;color:var(--dim);margin-top:2px}
+.cust-bal{text-align:right}
+.cust-bal-val{font-size:11px;font-weight:800;color:#ff5f57}
+.cust-bal-lbp{font-size:8px;color:var(--dim);margin-top:1px}
+.cust-bal-clear{font-size:10px;font-weight:700;color:#28c840}
+
+/* Management page */
+.mgmt-tabs{display:flex;gap:4px;margin-bottom:12px;flex-wrap:wrap}
+.mgmt-tab{font-size:9px;padding:5px 10px;border-radius:6px;border:1px solid var(--border);color:var(--dim);background:transparent;cursor:pointer}
+.mgmt-tab.active{background:var(--cyan);color:#060b18;border-color:var(--cyan);font-weight:700}
+.sale-row{display:grid;grid-template-columns:80px 1fr 70px 50px;gap:8px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,0.03);align-items:center}
+.sale-id{font-size:9px;color:var(--cyan);font-family:'IBM Plex Mono',monospace;font-weight:500}
+.sale-cust{font-size:9px;color:var(--text)}
+.sale-date{font-size:8px;color:var(--dim)}
+.sale-total{font-size:10px;font-weight:700;color:var(--cyan);text-align:right}
+
+/* Settings page */
+.settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.setting-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px}
+.setting-title{font-size:10px;font-weight:700;color:var(--text);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.setting-title span{color:var(--cyan)}
+.setting-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.setting-label{font-size:9px;color:var(--muted)}
+.setting-val{font-size:9px;font-weight:600;color:var(--text)}
+.toggle{width:28px;height:15px;border-radius:8px;background:var(--cyan);position:relative;cursor:pointer}
+.toggle::after{content:'';position:absolute;width:11px;height:11px;border-radius:50%;background:#060b18;top:2px;right:2px;transition:.2s}
+.toggle.off{background:var(--dim)}
+.toggle.off::after{right:auto;left:2px}
+.rate-input{background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:5px;padding:4px 8px;font-size:9px;color:var(--cyan);font-weight:700;width:80px;text-align:right;outline:none}
+
+/* CART */
+.d-cart{background:#040912;border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.cart-header{padding:12px 14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.cart-title-text{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase}
+.cart-clear{font-size:9px;color:var(--dim);cursor:pointer;background:none;border:none;padding:0}
+.cart-clear:hover{color:#ff5f57}
+.cart-items{flex:1;padding:10px;overflow-y:auto;display:flex;flex-direction:column;gap:6px}
+.cart-empty{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:20px}
+.cart-empty-icon{font-size:28px;color:var(--dim);font-family:'IBM Plex Mono',monospace}
+.cart-empty-text{font-size:10px;color:var(--dim)}
+.c-item{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:9px}
+.c-item-name{font-size:10px;font-weight:600;color:var(--text);margin-bottom:3px}
+.c-item-price{font-size:12px;font-weight:800;color:var(--cyan)}
+.c-item-lbp{font-size:8px;color:var(--dim)}
+.c-item-qty{display:flex;align-items:center;gap:5px;margin-top:5px}
+.qty-b{width:18px;height:18px;border-radius:4px;background:rgba(255,255,255,0.05);border:1px solid var(--border);color:var(--text);font-size:11px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.qty-b:hover{background:rgba(0,212,184,0.1);border-color:rgba(0,212,184,0.3);color:var(--cyan)}
+.qty-n{font-size:11px;font-weight:700;color:var(--text);background:rgba(255,255,255,0.05);border-radius:4px;padding:1px 7px;min-width:24px;text-align:center}
+.c-item-del{margin-left:auto;background:none;border:none;color:var(--dim);cursor:pointer;font-size:12px}
+.c-item-del:hover{color:#ff5f57}
+.cart-footer{padding:10px 14px;border-top:1px solid var(--border)}
+.cart-sku{background:rgba(255,255,255,0.03);border:1px solid var(--border);border-radius:7px;padding:6px 10px;font-size:9px;color:var(--text);width:100%;margin-bottom:10px;outline:none;font-family:'IBM Plex Mono',monospace}
+.cart-sku::placeholder{color:var(--dim)}
+.cart-sub-row{display:flex;justify-content:space-between;margin-bottom:3px}
+.cart-sub-label{font-size:9px;color:var(--dim)}
+.cart-sub-val{font-size:9px;font-weight:600;color:var(--text)}
+.cart-total-row{display:flex;justify-content:space-between;margin-bottom:10px}
+.cart-total-label{font-size:11px;font-weight:700;color:var(--text)}
+.cart-total-val{font-size:14px;font-weight:900;color:var(--cyan)}
+.cart-lbp-val{font-size:9px;color:var(--dim);text-align:right}
+.checkout-btn{width:100%;background:var(--cyan);color:#060b18;font-size:11px;font-weight:800;padding:11px;border-radius:8px;border:none;cursor:pointer;transition:opacity .2s}
+.checkout-btn:hover{opacity:0.88}
+.checkout-btn:disabled{background:var(--dim);cursor:not-allowed;opacity:0.5}
+
+/* CHECKOUT MODAL */
+.modal-overlay{position:absolute;inset:0;background:rgba(4,8,16,0.85);display:flex;align-items:center;justify-content:center;z-index:50;display:none}
+.modal-overlay.show{display:flex}
+.modal{background:var(--bg3);border:1px solid var(--border);border-radius:14px;width:640px;max-height:90%;overflow-y:auto}
+.modal-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.modal-title{font-size:14px;font-weight:700;color:var(--text)}
+.modal-close{background:none;border:none;color:var(--dim);cursor:pointer;font-size:18px}
+.modal-close:hover{color:#fff}
+.modal-body{padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.modal-section-title{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:10px}
+.modal-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid var(--border);border-radius:7px;padding:8px 12px;font-size:11px;color:var(--text);outline:none;margin-bottom:8px}
+.modal-input::placeholder{color:var(--dim)}
+.modal-input:focus{border-color:rgba(0,212,184,0.4)}
+.method-row{display:flex;gap:6px;margin-bottom:8px}
+.method-btn{flex:1;padding:7px;border-radius:7px;border:1px solid var(--border);background:transparent;color:var(--muted);font-size:10px;font-weight:600;cursor:pointer;transition:all .15s}
+.method-btn.active{background:var(--cyan-dim);border-color:rgba(0,212,184,0.4);color:var(--cyan)}
+.currency-toggle{display:flex;gap:0;border-radius:7px;overflow:hidden;border:1px solid var(--border);margin-bottom:8px}
+.cur-btn{flex:1;padding:6px;font-size:10px;font-weight:700;cursor:pointer;border:none;background:transparent;color:var(--muted);transition:all .15s}
+.cur-btn.active{background:var(--cyan);color:#060b18}
+.modal-totals{background:rgba(255,255,255,0.02);border-radius:10px;padding:12px;margin-top:8px}
+.modal-tot-row{display:flex;justify-content:space-between;margin-bottom:5px}
+.modal-tot-label{font-size:10px;color:var(--muted)}
+.modal-tot-val{font-size:10px;font-weight:600;color:var(--text)}
+.modal-tot-row.big .modal-tot-label{font-size:12px;font-weight:700;color:var(--text)}
+.modal-tot-row.big .modal-tot-val{font-size:14px;font-weight:900;color:var(--cyan)}
+.modal-tot-row.paid-row .modal-tot-val{color:var(--cyan)}
+.modal-tot-row.remain-row .modal-tot-val{color:#ff5f57}
+.complete-btn{width:100%;background:var(--cyan);color:#060b18;font-size:13px;font-weight:800;padding:14px;border-radius:10px;border:none;cursor:pointer;margin-top:12px;transition:opacity .2s}
+.complete-btn:hover{opacity:0.88}
+
+/* SUCCESS MODAL */
+.success-modal{background:var(--bg3);border:1px solid var(--border);border-radius:14px;width:380px;padding:36px;text-align:center}
+.success-check{width:64px;height:64px;border-radius:50%;background:rgba(40,200,64,0.12);border:2px solid rgba(40,200,64,0.3);display:flex;align-items:center;justify-content:center;margin:0 auto 16px;font-size:28px;color:#28c840}
+.success-title{font-size:20px;font-weight:800;color:#fff;margin-bottom:8px}
+.success-inv{font-size:12px;color:var(--muted);margin-bottom:24px;font-family:'IBM Plex Mono',monospace}
+.success-btns{display:flex;flex-direction:column;gap:8px}
+.s-btn-print{background:var(--cyan);color:#060b18;font-size:13px;font-weight:700;padding:12px;border-radius:9px;border:none;cursor:pointer;width:100%}
+.s-btn-wa{background:rgba(37,211,102,0.1);border:1px solid rgba(37,211,102,0.3);color:#25d366;font-size:13px;font-weight:600;padding:12px;border-radius:9px;cursor:pointer;width:100%}
+.s-btn-new{background:none;border:none;color:var(--muted);font-size:12px;cursor:pointer;padding:8px;width:100%}
+.s-btn-new:hover{color:#fff}
+
+/* FEATURES GRID */
+.features-section{padding:80px 48px;background:var(--bg2)}
+.feat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}
+.feat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px;transition:border-color .2s}
+.feat-card:hover{border-color:rgba(0,212,184,0.25)}
+.feat-icon{width:42px;height:42px;border-radius:10px;background:var(--cyan-dim);border:1px solid rgba(0,212,184,0.15);display:flex;align-items:center;justify-content:center;margin-bottom:14px;font-size:18px;color:var(--cyan)}
+.feat-name{font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px}
+.feat-desc{font-size:12px;color:var(--muted);line-height:1.7}
+
+/* INVOICE SECTION */
+.invoice-section{padding:80px 48px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.inv-preview{background:var(--bg3);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+.inv-topbar{background:#040810;padding:10px 16px;display:flex;align-items:center;gap:7px;border-bottom:1px solid var(--border)}
+.inv-doc{background:#fff;padding:24px;color:#333}
+.inv-doc-header{display:flex;justify-content:space-between;align-items:flex-start;padding-bottom:14px;border-bottom:2px solid #e8f0f8;margin-bottom:14px}
+.inv-doc-logo{font-size:20px;font-weight:900;color:#00b39f}
+.inv-doc-tag{font-size:9px;color:#999;margin-top:2px}
+.inv-doc-title-text{font-size:18px;font-weight:900;color:#1a202c}
+.inv-doc-id{font-size:10px;color:#999;margin-top:3px}
+.inv-meta{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:14px}
+.inv-meta-group label{font-size:8px;color:#999;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-bottom:2px}
+.inv-meta-group p{font-size:10px;font-weight:600;color:#1a202c}
+.inv-items-table{width:100%;border-collapse:collapse;margin-bottom:12px}
+.inv-items-table th{background:#00b39f;color:#fff;font-size:8px;padding:6px 8px;text-align:left;font-weight:600}
+.inv-items-table td{font-size:8px;padding:5px 8px;border-bottom:1px solid #f0f4f8;color:#333}
+.inv-items-table tr:nth-child(even) td{background:#f8fbff}
+.inv-totals-block{text-align:right}
+.inv-tot-line{display:flex;justify-content:space-between;font-size:9px;color:#666;margin-bottom:3px}
+.inv-tot-line.final{font-size:11px;font-weight:800;color:#1a202c;padding-top:5px;border-top:2px solid #e8f0f8;margin-top:5px}
+.inv-tot-line.green{color:#00b39f}
+.inv-tot-line.red{color:#e53e3e}
+.inv-exrate{font-size:8px;color:#bbb;margin-top:10px;padding-top:8px;border-top:1px solid #f0f4f8}
+.inv-text h2{font-size:32px;font-weight:800;letter-spacing:-0.02em;line-height:1.2;margin-bottom:14px}
+.inv-text p{font-size:15px;color:var(--muted);line-height:1.7;margin-bottom:22px}
+.inv-checklist{display:flex;flex-direction:column;gap:10px}
+.inv-check{display:flex;align-items:center;gap:10px;font-size:13px;color:#c8d0dc}
+.inv-check-icon{width:22px;height:22px;border-radius:50%;background:rgba(0,212,184,0.1);display:flex;align-items:center;justify-content:center;color:var(--cyan);font-size:12px;flex-shrink:0}
+
+/* FEATURE SHEET */
+.sheet-section{padding:80px 48px;background:var(--bg)}
+.sheet-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px}
+.sheet-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:20px}
+.sheet-card-title{font-size:12px;font-weight:800;color:var(--cyan);letter-spacing:0.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.sheet-features{display:flex;flex-direction:column;gap:5px}
+.sheet-feat{display:flex;align-items:flex-start;gap:8px;font-size:11px;color:var(--muted);line-height:1.5}
+.sheet-feat-dot{width:5px;height:5px;border-radius:50%;background:var(--cyan);flex-shrink:0;margin-top:5px}
+
+/* FOOTER */
+footer{background:#040810;border-top:1px solid var(--border);padding:40px 48px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:32px}
+.footer-brand .logo{font-size:20px;font-weight:800;color:#fff;margin-bottom:4px}.footer-brand .logo span{color:var(--cyan)}
+.footer-brand p{font-size:12px;color:var(--dim);margin-top:8px;line-height:1.7}
+.footer-col h4{font-size:11px;font-weight:700;color:var(--text);margin-bottom:12px}
+.footer-col a{display:block;font-size:12px;color:var(--dim);text-decoration:none;margin-bottom:6px;transition:color .2s}.footer-col a:hover{color:var(--cyan)}
+.footer-bottom{background:#040810;border-top:1px solid var(--border);padding:16px 48px;display:flex;justify-content:space-between;align-items:center}
+.footer-bottom p{font-size:11px;color:var(--dim)}
+.arabic-badge{background:var(--cyan-dim);border:1px solid rgba(0,212,184,0.2);color:var(--cyan);font-size:11px;padding:4px 12px;border-radius:6px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-logo">Cedar<span>POS</span></div>
+  <div class="nav-links">
+    <a href="#demo">Live Demo</a>
+    <a href="#features">Features</a>
+    <a href="#invoice">Invoices</a>
+    <a href="#sheet">Feature Sheet</a>
+  </div>
+  <button class="nav-cta">Get CedarPOS</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span class="live-dot"></span> Made in Lebanon · V1.0</div>
+  <h1>The POS built for<br><em>Lebanese business</em></h1>
+  <p class="hero-sub">Dual currency USD/LBP, Arabic RTL, VAT-ready, debt tracking, barcode scanning, and full offline operation — everything your shop needs in one desktop app.</p>
+  <div class="hero-btns">
+    <button class="btn-p" onclick="document.getElementById('demo').scrollIntoView({behavior:'smooth'})">Try Live Demo</button>
+    <button class="btn-s" onclick="document.getElementById('sheet').scrollIntoView({behavior:'smooth'})">View Feature Sheet</button>
+  </div>
+  <div class="hero-pills">
+    <span class="pill">💵 USD + LBP dual currency</span>
+    <span class="pill">🌐 Arabic RTL support</span>
+    <span class="pill">📊 VAT 11% compliant</span>
+    <span class="pill">📦 Barcode scanning</span>
+    <span class="pill">📄 PDF invoices</span>
+    <span class="pill">📶 100% offline</span>
+    <span class="pill">👥 Multi-user roles</span>
+    <span class="pill">💬 WhatsApp receipts</span>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stat-item"><div class="stat-num">150+</div><div class="stat-lbl">Features built in</div></div>
+  <div class="stat-item"><div class="stat-num">USD+LBP</div><div class="stat-lbl">Dual currency everywhere</div></div>
+  <div class="stat-item"><div class="stat-num">100%</div><div class="stat-lbl">Offline — no internet needed</div></div>
+  <div class="stat-item"><div class="stat-num">AR/EN</div><div class="stat-lbl">Full Arabic RTL interface</div></div>
+</div>
+
+<!-- LIVE DEMO -->
+<section class="demo-section" id="demo">
+  <div class="section-label">Interactive demo</div>
+  <div class="section-title">Try it yourself</div>
+  <div class="section-sub">Click through the pages. Add items to the cart. Complete a sale.</div>
+
+  <div class="demo-frame" style="position:relative">
+    <div class="demo-titlebar">
+      <div class="tlbtn" style="background:var(--red)"></div>
+      <div class="tlbtn" style="background:var(--yellow)"></div>
+      <div class="tlbtn" style="background:var(--green)"></div>
+      <span class="demo-title-text">CedarPOS — Admin Mode · Main Branch</span>
+    </div>
+    <div class="demo-app">
+      <!-- SIDEBAR -->
+      <div class="d-sidebar">
+        <div class="d-logo-area">
+          <div class="d-logo">CedarPOS</div>
+          <div class="d-branch">MAIN BRANCH</div>
+          <div class="d-mode">ADMIN MODE</div>
+        </div>
+        <div class="d-nav">
+          <div class="d-nav-item active" onclick="switchPage('pos',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg>
+            POS Terminal
+          </div>
+          <div class="d-nav-item" onclick="switchPage('dashboard',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
+            Dashboard
+          </div>
+          <div class="d-nav-item" onclick="switchPage('inventory',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 00-1-1.73l-7-4a2 2 0 00-2 0l-7 4A2 2 0 003 8v8a2 2 0 001 1.73l7 4a2 2 0 002 0l7-4A2 2 0 0021 16z"/></svg>
+            Inventory
+          </div>
+          <div class="d-nav-item" onclick="switchPage('customers',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+            Customers
+          </div>
+          <div class="d-nav-item" onclick="switchPage('management',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14,2 14,8 20,8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            Management
+          </div>
+          <div class="d-nav-item" onclick="switchPage('settings',this)">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+            Settings
+          </div>
+        </div>
+        <div class="d-logout">
+          <button class="d-logout-btn">⎋ Logout</button>
+        </div>
+      </div>
+
+      <!-- MAIN -->
+      <div class="d-main">
+        <div class="d-topbar" id="pos-topbar">
+          <div class="d-view-tabs">
+            <button class="d-vtab active" onclick="setPosView('categories',this)">⊞ Categories</button>
+            <button class="d-vtab" onclick="setPosView('all',this)">≡ All Items</button>
+            <button class="d-vtab" onclick="setPosView('scan',this)">⊙ Scan Only</button>
+          </div>
+          <div class="d-scan-bar">
+            <span class="d-scan-icon">||||</span>
+            <span class="d-scan-text">Scan Barcode or SKU...</span>
+            <span class="d-scan-badge">F1</span>
+          </div>
+        </div>
+        <div class="d-topbar" id="other-topbar" style="display:none">
+          <span id="page-title" style="font-size:13px;font-weight:700;color:var(--text)">Dashboard</span>
+          <div style="margin-left:auto;font-size:10px;color:var(--dim);font-family:'IBM Plex Mono',monospace">RATE: 1$ = 89,500 LBP</div>
+        </div>
+        <div class="d-content">
+
+          <!-- POS PAGE -->
+          <div class="page active" id="page-pos">
+            <div id="pos-categories">
+              <div class="d-content-title">Categories</div>
+              <div class="cat-grid">
+                <div class="cat-card" onclick="showProducts('Dairy')"><div class="cat-card-icon">🧀</div><div class="cat-card-name">Dairy</div><div class="cat-card-count">3 items</div></div>
+                <div class="cat-card" onclick="showProducts('Snacks')"><div class="cat-card-icon">🍟</div><div class="cat-card-name">Snacks</div><div class="cat-card-count">2 items</div></div>
+                <div class="cat-card" onclick="showProducts('Drinks')"><div class="cat-card-icon">🥤</div><div class="cat-card-name">Drinks</div><div class="cat-card-count">2 items</div></div>
+                <div class="cat-card" onclick="showProducts('Bakery')"><div class="cat-card-icon">🍞</div><div class="cat-card-name">Bakery</div><div class="cat-card-count">2 items</div></div>
+                <div class="cat-card" onclick="showProducts('Cleaning')"><div class="cat-card-icon">🧹</div><div class="cat-card-name">Cleaning</div><div class="cat-card-count">2 items</div></div>
+                <div class="cat-card" onclick="showProducts('Frozen')"><div class="cat-card-icon">❄️</div><div class="cat-card-name">Frozen</div><div class="cat-card-count">2 items</div></div>
+              </div>
+            </div>
+            <div id="pos-products" style="display:none">
+              <button class="back-btn" onclick="showCategories()">← Back</button>
+              <div class="d-content-title" id="products-title">Products</div>
+              <div class="prod-grid" id="products-grid"></div>
+            </div>
+            <div id="pos-scan" style="display:none">
+              <div style="text-align:center;padding:60px 20px">
+                <div style="font-size:40px;margin-bottom:16px;color:var(--cyan)">⊙</div>
+                <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:8px">Ready to Scan</div>
+                <div style="font-size:11px;color:var(--dim);margin-bottom:20px">Scan a barcode or type SKU below</div>
+                <input style="background:rgba(255,255,255,0.04);border:2px solid rgba(0,212,184,0.4);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--text);width:100%;max-width:360px;outline:none;text-align:center;font-family:'IBM Plex Mono',monospace" placeholder="Scan or type SKU..." />
+              </div>
+            </div>
+            <div id="pos-all" style="display:none">
+              <div class="d-content-title">All Items</div>
+              <div class="prod-grid" id="all-products-grid"></div>
+            </div>
+          </div>
+
+          <!-- DASHBOARD PAGE -->
+          <div class="page" id="page-dashboard">
+            <div class="dash-cards">
+              <div class="dash-card"><div class="dash-card-label">Product Revenue</div><div class="dash-card-val">$4,550,850</div><div class="dash-card-sub">407,001,075,000 LBP</div></div>
+              <div class="dash-card"><div class="dash-card-label">Total Sales</div><div class="dash-card-val" style="color:var(--text)">6</div><div class="dash-card-sub">This month</div></div>
+              <div class="dash-card"><div class="dash-card-label">Low Stock Alerts</div><div class="dash-card-val" style="color:var(--yellow)">2</div><div class="dash-card-sub">Products need restock</div></div>
+              <div class="dash-card"><div class="dash-card-label">Outstanding Debt</div><div class="dash-card-val" style="color:#ff5f57">$250,350</div><div class="dash-card-sub">1 debtor</div></div>
+            </div>
+            <div class="chart-area">
+              <div class="chart-title">Monthly Sales Performance</div>
+              <div class="chart-bars" id="chart-bars"></div>
+              <div id="chart-labels" style="display:flex;gap:6px;margin-top:4px"></div>
+            </div>
+          </div>
+
+          <!-- INVENTORY PAGE -->
+          <div class="page" id="page-inventory">
+            <div class="inv-header-row">
+              <input class="inv-search" placeholder="Search products..." />
+              <button class="add-btn">+ Add Product</button>
+            </div>
+            <table class="inv-table">
+              <thead><tr><th class="inv-th">Product</th><th class="inv-th">Category</th><th class="inv-th">Sale Price</th><th class="inv-th">Stock</th></tr></thead>
+              <tbody>
+                <tr><td class="inv-td">Halloumi Cheese</td><td class="inv-td"><span style="background:var(--cyan-dim);color:var(--cyan);font-size:7px;padding:2px 6px;border-radius:4px;font-weight:700">Dairy</span></td><td><div class="inv-td price">$12.00</div><div class="inv-td lbp">1,074,000 LBP</div></td><td class="inv-td"><span class="stock-badge in-stock">IN STOCK 8</span></td></tr>
+                <tr><td class="inv-td">Kashkaval Cheese</td><td class="inv-td"><span style="background:var(--cyan-dim);color:var(--cyan);font-size:7px;padding:2px 6px;border-radius:4px;font-weight:700">Dairy</span></td><td><div class="inv-td price">$15.00</div><div class="inv-td lbp">1,342,500 LBP</div></td><td class="inv-td"><span class="stock-badge in-stock">IN STOCK 10</span></td></tr>
+                <tr><td class="inv-td">Lays Ketchup</td><td class="inv-td"><span style="background:rgba(254,188,46,0.1);color:#febc2e;font-size:7px;padding:2px 6px;border-radius:4px;font-weight:700">Snacks</span></td><td><div class="inv-td price">$3.50</div><div class="inv-td lbp">313,250 LBP</div></td><td class="inv-td"><span class="stock-badge low-stock">⚠ LOW 2</span></td></tr>
+                <tr><td class="inv-td">Pepsi 1.5L</td><td class="inv-td"><span style="background:rgba(55,138,221,0.1);color:#378add;font-size:7px;padding:2px 6px;border-radius:4px;font-weight:700">Drinks</span></td><td><div class="inv-td price">$2.00</div><div class="inv-td lbp">179,000 LBP</div></td><td class="inv-td"><span class="stock-badge in-stock">IN STOCK 24</span></td></tr>
+                <tr><td class="inv-td">Mana'eesh Zaatar</td><td class="inv-td"><span style="background:rgba(99,153,34,0.1);color:#639922;font-size:7px;padding:2px 6px;border-radius:4px;font-weight:700">Bakery</span></td><td><div class="inv-td price">$4.00</div><div class="inv-td lbp">358,000 LBP</div></td><td class="inv-td"><span class="stock-badge low-stock">⚠ LOW 1</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- CUSTOMERS PAGE -->
+          <div class="page" id="page-customers">
+            <div class="cust-list">
+              <div class="cust-card"><div><div class="cust-name">Hossam Khaled</div><div class="cust-phone">📱 71371571 · Choueifat</div></div><div class="cust-bal"><div class="cust-bal-clear">CLEAR</div><div class="cust-bal-lbp">No balance due</div></div></div>
+              <div class="cust-card"><div><div class="cust-name">mhmd</div><div class="cust-phone">📱 70096064</div></div><div class="cust-bal"><div class="cust-bal-val">$250,350</div><div class="cust-bal-lbp">22,406,325,000 LBP</div></div></div>
+              <div class="cust-card"><div><div class="cust-name">Ali Hamdan</div><div class="cust-phone">📱 03214567 · Beirut</div></div><div class="cust-bal"><div class="cust-bal-val">$1,200</div><div class="cust-bal-lbp">107,400,000 LBP</div></div></div>
+            </div>
+          </div>
+
+          <!-- MANAGEMENT PAGE -->
+          <div class="page" id="page-management">
+            <div class="mgmt-tabs">
+              <button class="mgmt-tab active" onclick="setMgmtTab('sales',this)">Sales</button>
+              <button class="mgmt-tab" onclick="setMgmtTab('quotes',this)">Quotes</button>
+              <button class="mgmt-tab" onclick="setMgmtTab('pl',this)">P&amp;L</button>
+              <button class="mgmt-tab" onclick="setMgmtTab('purchases',this)">Purchases</button>
+              <button class="mgmt-tab" onclick="setMgmtTab('eod',this)">EOD History</button>
+            </div>
+            <div id="mgmt-sales">
+              <div class="sale-row" style="border-bottom:1px solid var(--border);margin-bottom:4px"><span style="font-size:8px;color:var(--dim);font-weight:700">ID</span><span style="font-size:8px;color:var(--dim);font-weight:700">CUSTOMER</span><span style="font-size:8px;color:var(--dim);font-weight:700">DATE</span><span style="font-size:8px;color:var(--dim);font-weight:700;text-align:right">TOTAL</span></div>
+              <div class="sale-row"><span class="sale-id">INV-ZATNEP</span><span><div class="sale-cust">Hossam Khaled</div><div class="sale-date">6/8/2026</div></span><span style="font-size:9px;color:var(--dim)">Cash</span><span class="sale-total">$1,750</span></div>
+              <div class="sale-row"><span class="sale-id">INV-ABLTSF</span><span><div class="sale-cust">Walk-in Customer</div><div class="sale-date">6/8/2026</div></span><span style="font-size:9px;color:var(--dim)">Card</span><span class="sale-total">$800</span></div>
+              <div class="sale-row"><span class="sale-id">INV-U1DCH3</span><span><div class="sale-cust">mhmd</div><div class="sale-date">6/8/2026</div></span><span style="font-size:9px;color:var(--dim)">Cash</span><span class="sale-total">$1,300</span></div>
+              <div class="sale-row"><span class="sale-id">INV-OSS8XU</span><span><div class="sale-cust">mhmd</div><div class="sale-date">4/10/2026</div></span><span style="font-size:9px;color:var(--dim)">Cash</span><span class="sale-total">$350</span></div>
+            </div>
+            <div id="mgmt-quotes" style="display:none"><div style="font-size:11px;color:var(--dim);padding:20px;text-align:center">No quotes saved yet</div></div>
+            <div id="mgmt-pl" style="display:none">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px">
+                <div class="dash-card"><div class="dash-card-label">Total Revenue</div><div class="dash-card-val">$4,550,850</div></div>
+                <div class="dash-card"><div class="dash-card-label">Net Profit</div><div class="dash-card-val" style="color:#28c840">$1,820,340</div></div>
+                <div class="dash-card"><div class="dash-card-label">Gross Margin</div><div class="dash-card-val" style="color:var(--yellow)">40%</div></div>
+              </div>
+              <div style="font-size:9px;color:var(--dim);padding:8px;background:var(--card);border-radius:8px;border:1px solid var(--border)">Export P&L as CSV available</div>
+            </div>
+            <div id="mgmt-purchases" style="display:none"><div style="font-size:11px;color:var(--dim);padding:20px;text-align:center">No purchase orders yet</div></div>
+            <div id="mgmt-eod" style="display:none"><div style="font-size:11px;color:var(--dim);padding:20px;text-align:center">No days closed yet</div></div>
+          </div>
+
+          <!-- SETTINGS PAGE -->
+          <div class="page" id="page-settings">
+            <div class="settings-grid">
+              <div class="setting-card">
+                <div class="setting-title"><span>🏢</span> Branch Info</div>
+                <div class="setting-row"><span class="setting-label">Business Name</span><span class="setting-val">CedarPOS</span></div>
+                <div class="setting-row"><span class="setting-label">Branch</span><span class="setting-val">Main Branch</span></div>
+                <div class="setting-row"><span class="setting-label">Tagline</span><span class="setting-val">your comfort zone is here</span></div>
+              </div>
+              <div class="setting-card">
+                <div class="setting-title"><span>💱</span> Currency</div>
+                <div class="setting-row"><span class="setting-label">Exchange Rate</span><input class="rate-input" value="89,500" /></div>
+                <div style="font-size:9px;color:var(--dim);margin-top:4px">1 USD = ? LBP</div>
+              </div>
+              <div class="setting-card">
+                <div class="setting-title"><span>%</span> Tax Settings</div>
+                <div class="setting-row"><span class="setting-label">VAT Globally</span><div class="toggle off" onclick="this.classList.toggle('off')"></div></div>
+                <div class="setting-row"><span class="setting-label">VAT Rate</span><span class="setting-val">11%</span></div>
+              </div>
+              <div class="setting-card">
+                <div class="setting-title"><span>🖥</span> Display</div>
+                <div class="setting-row"><span class="setting-label">Font Size</span><span class="setting-val">Normal</span></div>
+                <div class="setting-row"><span class="setting-label">Quick Keys Mode</span><div class="toggle off" onclick="this.classList.toggle('off')"></div></div>
+                <div class="setting-row"><span class="setting-label">Layout Density</span><span class="setting-val">Comfortable</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- CART -->
+      <div class="d-cart">
+        <div class="cart-header">
+          <span class="cart-title-text">🛒 Cart</span>
+          <button class="cart-clear" onclick="clearCart()">Clear all</button>
+        </div>
+        <div class="cart-items" id="cart-items">
+          <div class="cart-empty">
+            <div class="cart-empty-icon">|||</div>
+            <div class="cart-empty-text">Cart is empty</div>
+          </div>
+        </div>
+        <div class="cart-footer">
+          <input class="cart-sku" id="cart-sku-input" placeholder="Scan or type SKU..." onkeydown="handleSkuInput(event)" />
+          <div class="cart-sub-row"><span class="cart-sub-label">Subtotal</span><span class="cart-sub-val" id="cart-subtotal">$0</span></div>
+          <div class="cart-sub-row"><span class="cart-sub-label">LBP</span><span class="cart-sub-val" id="cart-lbp" style="color:var(--dim)">0</span></div>
+          <div style="height:8px"></div>
+          <button class="checkout-btn" id="checkout-btn" onclick="openCheckout()" disabled>Checkout (F3)</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CHECKOUT MODAL -->
+    <div class="modal-overlay" id="checkout-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title">Finalize Sale</span>
+          <button class="modal-close" onclick="closeCheckout()">×</button>
+        </div>
+        <div class="modal-body">
+          <div>
+            <div class="modal-section-title">Cart Summary</div>
+            <div id="modal-cart-summary" style="margin-bottom:12px;font-size:10px;color:var(--muted)"></div>
+            <div class="modal-section-title" style="margin-top:8px">Customer Information</div>
+            <input class="modal-input" placeholder="Phone (optional)" />
+            <input class="modal-input" placeholder="Full Name (optional)" />
+            <input class="modal-input" placeholder="Address (optional)" />
+          </div>
+          <div>
+            <div class="modal-section-title">Payment Details</div>
+            <div style="font-size:9px;color:var(--dim);margin-bottom:4px">Method</div>
+            <div class="method-row">
+              <button class="method-btn active" onclick="setMethod(this)">Cash</button>
+              <button class="method-btn" onclick="setMethod(this)">Card</button>
+              <button class="method-btn" onclick="setMethod(this)">Transfer</button>
+            </div>
+            <div style="font-size:9px;color:var(--dim);margin-bottom:4px">Currency</div>
+            <div class="currency-toggle">
+              <button class="cur-btn active" onclick="setCur(this,'usd')">USD</button>
+              <button class="cur-btn" onclick="setCur(this,'lbp')">LBP</button>
+            </div>
+            <div class="modal-totals">
+              <div class="modal-tot-row"><span class="modal-tot-label">Subtotal</span><span class="modal-tot-val" id="modal-sub">$0</span></div>
+              <div class="modal-tot-row big"><span class="modal-tot-label">Total</span><span class="modal-tot-val" id="modal-total">$0</span></div>
+              <div style="font-size:9px;color:var(--dim);margin-bottom:4px" id="modal-lbp-line"></div>
+              <div class="modal-tot-row paid-row"><span class="modal-tot-label">Paid</span><span class="modal-tot-val" id="modal-paid">$0</span></div>
+              <div class="modal-tot-row remain-row"><span class="modal-tot-label">Remaining</span><span class="modal-tot-val" id="modal-remain">$0</span></div>
+            </div>
+            <button class="complete-btn" onclick="completeSale()">Complete Sale</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUCCESS MODAL -->
+    <div class="modal-overlay" id="success-modal">
+      <div class="success-modal">
+        <div class="success-check">✓</div>
+        <div class="success-title">Sale Successful!</div>
+        <div class="success-inv" id="success-inv-id">INV-XXXXXX · $0</div>
+        <div class="success-btns">
+          <button class="s-btn-print" onclick="closeSuccess()">🖨 Print Receipt</button>
+          <button class="s-btn-wa" onclick="closeSuccess()">💬 Send via WhatsApp</button>
+          <button class="s-btn-new" onclick="closeSuccess()">NEW SALE</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features-section" id="features">
+  <div class="section-label">What's included</div>
+  <div class="section-title">Built for how Lebanon works</div>
+  <div class="section-sub">Not a generic POS with LBP bolted on. Built from scratch for the local market.</div>
+  <div class="feat-grid">
+    <div class="feat-card"><div class="feat-icon">💵</div><div class="feat-name">Dual currency everywhere</div><div class="feat-desc">Every price, invoice, cart total, and report shows both USD and LBP simultaneously using your live exchange rate.</div></div>
+    <div class="feat-card"><div class="feat-icon">📄</div><div class="feat-name">Professional PDF invoices</div><div class="feat-desc">Clean, print-ready invoices with your logo, VAT breakdown, dual-currency pricing, and exchange rate footer.</div></div>
+    <div class="feat-card"><div class="feat-icon">💳</div><div class="feat-name">Debt tracking & Debt Hunter</div><div class="feat-desc">Track every customer's outstanding balance, view unpaid invoices, and send WhatsApp payment reminders.</div></div>
+    <div class="feat-card"><div class="feat-icon">📦</div><div class="feat-name">Full inventory management</div><div class="feat-desc">Products, categories, cost vs sale price, stock logs, restock orders, supplier tracking, and CSV import.</div></div>
+    <div class="feat-card"><div class="feat-icon">📊</div><div class="feat-name">P&L and tax reports</div><div class="feat-desc">Revenue, COGS, gross profit, and margin per product. Full tax report by date range. Export for your accountant.</div></div>
+    <div class="feat-card"><div class="feat-icon">🌐</div><div class="feat-name">Arabic RTL interface</div><div class="feat-desc">Complete Arabic right-to-left layout across every page, modal, and form. Switch in one tap.</div></div>
+    <div class="feat-card"><div class="feat-icon">🔖</div><div class="feat-name">Barcode scanning & printing</div><div class="feat-desc">Scan any barcode to add items instantly. Print scannable EAN13/Code128 labels from inventory.</div></div>
+    <div class="feat-card"><div class="feat-icon">👥</div><div class="feat-name">Multi-user with roles</div><div class="feat-desc">Admin sees everything. Staff sees only what they need. Permissions enforced on every page, not just navigation.</div></div>
+    <div class="feat-card"><div class="feat-icon">📶</div><div class="feat-name">100% offline</div><div class="feat-desc">No internet required. Auto-backup every 10 minutes to C:/POSbackup. One-click restore anytime.</div></div>
+  </div>
+</section>
+
+<!-- INVOICE -->
+<section class="invoice-section" id="invoice">
+  <div class="inv-preview">
+    <div class="inv-topbar">
+      <div class="tlbtn" style="background:var(--red)"></div>
+      <div class="tlbtn" style="background:var(--yellow)"></div>
+      <div class="tlbtn" style="background:var(--green)"></div>
+      <span style="font-size:10px;color:var(--dim);margin:0 auto;font-family:'IBM Plex Mono',monospace">Invoice preview</span>
+    </div>
+    <div class="inv-doc">
+      <div class="inv-doc-header">
+        <div><div class="inv-doc-logo">CedarPOS</div><div class="inv-doc-tag">your comfort zone is here · Main Branch</div></div>
+        <div style="text-align:right"><div class="inv-doc-title-text">INVOICE</div><div class="inv-doc-id">#INV-ZATNEP</div></div>
+      </div>
+      <div class="inv-meta">
+        <div class="inv-meta-group"><label>Bill to</label><p>Hossam Khaled</p><p style="font-weight:400;color:#999;font-size:9px">71371571 · Choueifat</p></div>
+        <div class="inv-meta-group" style="text-align:right"><label>Invoice date</label><p>6/8/2026</p><p style="font-weight:400;color:#999;font-size:9px">Cash · Staff: admin</p></div>
+      </div>
+      <table class="inv-items-table">
+        <thead><tr><th>Description</th><th>Qty</th><th>Unit Price</th><th>Total</th></tr></thead>
+        <tbody>
+          <tr><td>Halloumi Cheese</td><td>2</td><td>$12.00 / 1,074,000 LBP</td><td>$24.00</td></tr>
+          <tr><td>Kashkaval Cheese</td><td>1</td><td>$15.00 / 1,342,500 LBP</td><td>$15.00</td></tr>
+          <tr><td>Pepsi 1.5L</td><td>3</td><td>$2.00 / 179,000 LBP</td><td>$6.00</td></tr>
+        </tbody>
+      </table>
+      <div class="inv-totals-block">
+        <div class="inv-tot-line"><span>Subtotal (USD)</span><span>$45.00</span></div>
+        <div class="inv-tot-line final"><span>Total Amount (USD)</span><span>$45.00</span></div>
+        <div class="inv-tot-line green"><span>Paid Amount</span><span>$45.00</span></div>
+        <div class="inv-tot-line red"><span>Remaining Balance</span><span>$0.00</span></div>
+      </div>
+      <div class="inv-exrate">Exchange Rate: 1$ = 89,500 LBP</div>
+    </div>
+  </div>
+  <div class="inv-text">
+    <div class="section-label">Invoices</div>
+    <h2>Clean invoices<br>your clients trust</h2>
+    <p>Every sale auto-generates a professional PDF with your branding, dual-currency pricing, VAT breakdown, and exchange rate. Send via WhatsApp in one tap.</p>
+    <div class="inv-checklist">
+      <div class="inv-check"><div class="inv-check-icon">✓</div> Your logo, name, and tagline</div>
+      <div class="inv-check"><div class="inv-check-icon">✓</div> USD and LBP on every line item</div>
+      <div class="inv-check"><div class="inv-check-icon">✓</div> VAT-compliant with tax registration number</div>
+      <div class="inv-check"><div class="inv-check-icon">✓</div> Send via WhatsApp with one tap</div>
+      <div class="inv-check"><div class="inv-check-icon">✓</div> Reprint any past invoice at any time</div>
+      <div class="inv-check"><div class="inv-check-icon">✓</div> Branding updates automatically when you change settings</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE SHEET -->
+<section class="sheet-section" id="sheet">
+  <div class="section-label">Feature sheet</div>
+  <div class="section-title">Everything included in CedarPOS V1.0</div>
+  <div class="section-sub">A complete commercial POS built for Lebanese small and medium businesses.</div>
+  <div class="sheet-grid">
+    <div class="sheet-card">
+      <div class="sheet-card-title">🖥 POS Terminal</div>
+      <div class="sheet-features">
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Category, All Items, and Scan Only view modes</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Barcode scanner with auto-focus (F1 shortcut)</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Manual SKU typing in cart to add items</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Editable quantity — type directly in cart</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Save as Quote from cart</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Dual currency prices on all product cards</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Live exchange rate displayed on terminal</div>
+      </div>
+    </div>
+    <div class="sheet-card">
+      <div class="sheet-card-title">💳 Finalize Sale</div>
+      <div class="sheet-features">
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Optional customer info — walk-in friendly</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Customer autocomplete by phone number</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Payment methods: Cash, Card, Transfer</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Pay in USD or LBP toggle</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Discount selector (0%–20%)</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Delivery fee with USD/LBP toggle</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>VAT toggle per sale (11%)</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Partial deposit payment with remaining balance</div>
+      </div>
+    </div>
+    <div class="sheet-card">
+      <div class="sheet-card-title">📦 Inventory</div>
+      <div class="sheet-features">
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Add, edit, delete products</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Price input in USD or LBP with live conversion</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Auto-generated scannable EAN13/Code128 barcode</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Searchable category combobox with inline create</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Print barcode labels (58mm, 80mm, A4)</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Per-product stock adjustment log</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Low stock threshold with warning badge</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Import from CSV, Excel, or JSON</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Export inventory as CSV</div>
+      </div>
+    </div>
+    <div class="sheet-card">
+      <div class="sheet-card-title">👥 Customers & Debt</div>
+      <div class="sheet-features">
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Customer database with balance tracking</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Balance shown in USD and LBP</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Full receipt history per customer</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Pay outstanding balance (oldest invoice first)</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Debt Hunter dashboard with collection score</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Average delay in days per debtor</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Send WhatsApp payment reminder</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Export debtors as JSON or CSV</div>
+      </div>
+    </div>
+    <div class="sheet-card">
+      <div class="sheet-card-title">📊 Management & Reports</div>
+      <div class="sheet-features">
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Sales tab with full invoice history</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Quotes tab — save, convert, print, delete</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>P&L: revenue, COGS, profit, margin per product</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Tax report by date range with CSV export</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Purchase orders and restock history</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>End of Day summary with print option</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>EOD history log</div>
+      </div>
+    </div>
+    <div class="sheet-card">
+      <div class="sheet-card-title">⚙️ Settings & System</div>
+      <div class="sheet-features">
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Business name, logo, tagline, branch label</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>USD to LBP exchange rate setting</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>VAT rate and tax registration number</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Admin and Staff user roles with full permissions</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Auto-backup every 10 min + manual backup/restore</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Loyalty program (points per $1, redemption value)</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Font size and layout density options</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>WhatsApp message template customization</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Email alerts for sales and low stock</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>First-launch onboarding wizard</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>In-app Help Center with Arabic support</div>
+        <div class="sheet-feat"><div class="sheet-feat-dot"></div>Full Arabic RTL interface toggle</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-brand">
+    <div class="logo">Cedar<span>POS</span></div>
+    <p>A complete point-of-sale system built for Lebanese small and medium businesses. Dual currency, Arabic RTL, fully offline.</p>
+  </div>
+  <div class="footer-col">
+    <h4>Pages</h4>
+    <a href="#demo">Live Demo</a>
+    <a href="#features">Features</a>
+    <a href="#invoice">Invoices</a>
+    <a href="#sheet">Feature Sheet</a>
+  </div>
+  <div class="footer-col">
+    <h4>System</h4>
+    <a href="#">Windows Desktop App</a>
+    <a href="#">CedarPOS V1.0</a>
+    <a href="#">Made in Lebanon 🇱🇧</a>
+  </div>
+</footer>
+<div class="footer-bottom">
+  <p>CedarPOS V1.0 — Made in Lebanon with ♥</p>
+  <div class="arabic-badge">يدعم العربية بالكامل</div>
+  <p>© 2026 CedarPOS. All rights reserved.</p>
+</div>
+
+<script>
+const RATE = 89500;
+const products = {
+  'Dairy':[{name:'Halloumi Cheese',price:12,sku:'SKU-HALL001'},{name:'Kashkaval Cheese',price:15,sku:'SKU-KASH001'},{name:'Ikkawi Cheese',price:8,sku:'SKU-IKKA001'}],
+  'Snacks':[{name:'Lays Ketchup',price:3.5,sku:'SKU-LAYS001'},{name:'Pringles Original',price:5,sku:'SKU-PRIN001'}],
+  'Drinks':[{name:'Pepsi 1.5L',price:2,sku:'SKU-PEPS001'},{name:'Almaza Beer',price:3,sku:'SKU-ALMA001'}],
+  'Bakery':[{name:"Mana'eesh Zaatar",price:4,sku:'SKU-MANA001'},{name:'Kaak Sesame',price:2.5,sku:'SKU-KAAK001'}],
+  'Cleaning':[{name:'Ariel Powder 3kg',price:8,sku:'SKU-ARIE001'},{name:'Ajax Bleach',price:3,sku:'SKU-AJAX001'}],
+  'Frozen':[{name:'McCain Fries 1kg',price:6,sku:'SKU-MCCA001'},{name:'Frozen Peas 500g',price:4,sku:'SKU-PEAS001'}]
+};
+let cart = [];
+let allProds = Object.values(products).flat();
+
+function switchPage(page, el) {
+  document.querySelectorAll('.d-nav-item').forEach(i=>i.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-'+page).classList.add('active');
+  const posTop = document.getElementById('pos-topbar');
+  const othTop = document.getElementById('other-topbar');
+  if(page==='pos'){posTop.style.display='flex';othTop.style.display='none';}
+  else{posTop.style.display='none';othTop.style.display='flex';document.getElementById('page-title').textContent=el.textContent.trim();}
+  if(page==='dashboard') buildChart();
+}
+
+function setPosView(view, btn) {
+  document.querySelectorAll('.d-vtab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('pos-categories').style.display = view==='categories'?'block':'none';
+  document.getElementById('pos-products').style.display = 'none';
+  document.getElementById('pos-scan').style.display = view==='scan'?'block':'none';
+  const allGrid = document.getElementById('pos-all');
+  if(view==='all'){
+    allGrid.style.display='block';
+    const g = document.getElementById('all-products-grid');
+    g.innerHTML = allProds.map(p=>`<div class="prod-card" onclick="addToCart('${p.name}',${p.price},'${p.sku}')"><div class="prod-name">${p.name}</div><div class="prod-price">$${p.price.toFixed(2)}</div><div class="prod-lbp">${(p.price*RATE).toLocaleString()} LBP</div><div class="prod-stock">IN STOCK</div></div>`).join('');
+  } else allGrid.style.display='none';
+}
+
+function showProducts(cat) {
+  document.getElementById('pos-categories').style.display='none';
+  document.getElementById('pos-products').style.display='block';
+  document.getElementById('products-title').textContent = cat;
+  const g = document.getElementById('products-grid');
+  g.innerHTML = products[cat].map(p=>`<div class="prod-card" onclick="addToCart('${p.name}',${p.price},'${p.sku}')"><div class="prod-name">${p.name}</div><div class="prod-price">$${p.price.toFixed(2)}</div><div class="prod-lbp">${(p.price*RATE).toLocaleString()} LBP</div><div class="prod-stock">IN STOCK</div></div>`).join('');
+}
+
+function showCategories() {
+  document.getElementById('pos-categories').style.display='block';
+  document.getElementById('pos-products').style.display='none';
+}
+
+function addToCart(name, price, sku) {
+  const existing = cart.find(i=>i.sku===sku);
+  if(existing){existing.qty++;}
+  else{cart.push({name,price,sku,qty:1});}
+  renderCart();
+}
+
+function removeFromCart(sku) {
+  cart = cart.filter(i=>i.sku!==sku);
+  renderCart();
+}
+
+function changeQty(sku, delta) {
+  const item = cart.find(i=>i.sku===sku);
+  if(!item) return;
+  item.qty += delta;
+  if(item.qty <= 0) cart = cart.filter(i=>i.sku!==sku);
+  renderCart();
+}
+
+function clearCart() { cart=[]; renderCart(); }
+
+function renderCart() {
+  const container = document.getElementById('cart-items');
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  if(cart.length===0){
+    container.innerHTML='<div class="cart-empty"><div class="cart-empty-icon">|||</div><div class="cart-empty-text">Cart is empty</div></div>';
+  } else {
+    container.innerHTML = cart.map(i=>`
+      <div class="c-item">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start">
+          <div class="c-item-name">${i.name}</div>
+          <button class="c-item-del" onclick="removeFromCart('${i.sku}')">×</button>
+        </div>
+        <div class="c-item-price">$${(i.price*i.qty).toFixed(2)}</div>
+        <div class="c-item-lbp">${(i.price*i.qty*RATE).toLocaleString()} LBP</div>
+        <div class="c-item-qty">
+          <button class="qty-b" onclick="changeQty('${i.sku}',-1)">−</button>
+          <span class="qty-n">${i.qty}</span>
+          <button class="qty-b" onclick="changeQty('${i.sku}',1)">+</button>
+        </div>
+      </div>`).join('');
+  }
+  document.getElementById('cart-subtotal').textContent = '$'+total.toFixed(2);
+  document.getElementById('cart-lbp').textContent = (total*RATE).toLocaleString();
+  document.getElementById('checkout-btn').disabled = cart.length===0;
+}
+
+function handleSkuInput(e) {
+  if(e.key!=='Enter') return;
+  const val = e.target.value.trim();
+  const prod = allProds.find(p=>p.sku.toLowerCase()===val.toLowerCase()||p.name.toLowerCase()===val.toLowerCase());
+  if(prod){addToCart(prod.name,prod.price,prod.sku);e.target.value='';}
+  else{e.target.style.borderColor='rgba(255,95,87,0.5)';setTimeout(()=>e.target.style.borderColor='',1200);}
+}
+
+function openCheckout() {
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  document.getElementById('modal-sub').textContent='$'+total.toFixed(2);
+  document.getElementById('modal-total').textContent='$'+total.toFixed(2);
+  document.getElementById('modal-lbp-line').textContent=(total*RATE).toLocaleString()+' LBP';
+  document.getElementById('modal-paid').textContent='$'+total.toFixed(2);
+  document.getElementById('modal-remain').textContent='$0.00';
+  document.getElementById('modal-cart-summary').innerHTML=cart.map(i=>`<div style="display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.04)"><span>${i.name} ×${i.qty}</span><span style="color:var(--cyan)">$${(i.price*i.qty).toFixed(2)}</span></div>`).join('');
+  document.getElementById('checkout-modal').classList.add('show');
+}
+
+function closeCheckout() { document.getElementById('checkout-modal').classList.remove('show'); }
+
+function completeSale() {
+  const total = cart.reduce((s,i)=>s+i.price*i.qty,0);
+  const id = 'INV-'+(Math.random().toString(36).substr(2,6).toUpperCase());
+  closeCheckout();
+  document.getElementById('success-inv-id').textContent=id+' · $'+total.toFixed(2);
+  document.getElementById('success-modal').classList.add('show');
+  cart=[];renderCart();
+}
+
+function closeSuccess() { document.getElementById('success-modal').classList.remove('show'); }
+
+function setMethod(btn) { document.querySelectorAll('.method-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+function setCur(btn) { document.querySelectorAll('.cur-btn').forEach(b=>b.classList.remove('active')); btn.classList.add('active'); }
+
+function setMgmtTab(tab, btn) {
+  document.querySelectorAll('.mgmt-tab').forEach(b=>b.classList.remove('active')); btn.classList.add('active');
+  ['sales','quotes','pl','purchases','eod'].forEach(t=>{const el=document.getElementById('mgmt-'+t);if(el)el.style.display=t===tab?'block':'none';});
+}
+
+function buildChart() {
+  const bars = document.getElementById('chart-bars');
+  const labels = document.getElementById('chart-labels');
+  const data = [320,480,290,650,820,410,580,760,430,540,890,950];
+  const months = ['Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar','Apr','May','Jun'];
+  const max = Math.max(...data);
+  bars.innerHTML = data.map((v,i)=>`<div class="bar" style="height:${Math.round(v/max*100)}%" title="${months[i]}: $${v}K"></div>`).join('');
+  labels.innerHTML = data.map((_,i)=>`<div class="bar-label" style="flex:1">${months[i]}</div>`).join('');
+}
+</script>
+</body>
+</html>
