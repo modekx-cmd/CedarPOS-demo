@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+  <title>CedarPOS · The Lebanese Business Management System</title>
+  <meta name="description" content="CedarPOS – one‑time payment POS & business management for Lebanese businesses. Offline, bilingual, with inventory, debt tracking, and more.">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  <style>
+    /* ----- RESET & VARIABLES ----- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    :root {
+      --bg-primary: #0b0d11;
+      --bg-secondary: #13161c;
+      --bg-glass: rgba(255,255,255,0.03);
+      --border-glass: rgba(255,255,255,0.06);
+      --text-primary: #f0f2f6;
+      --text-secondary: #b0b8c5;
+      --text-accent: #a78bfa;
+      --cta-whatsapp: #25D366;
+      --cta-demo: #7c6cf0;
+      --shadow-glow: 0 20px 40px -12px rgba(0,0,0,0.8);
+      --radius-lg: 32px;
+      --radius-md: 20px;
+      --transition: 0.25s cubic-bezier(0.2, 0.9, 0.4, 1);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1240px; margin: 0 auto; padding: 0 24px; }
+    .glass {
+      background: var(--bg-glass);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+    }
+    /* ----- BUTTONS ----- */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 30px;
+      border-radius: 60px;
+      font-weight: 600;
+      font-size: 1rem;
+      border: none;
+      cursor: pointer;
+      transition: var(--transition);
+      text-decoration: none;
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+    }
+    .btn-primary {
+      background: var(--cta-demo);
+      color: #fff;
+      box-shadow: 0 8px 24px -6px rgba(124, 108, 240, 0.35);
+    }
+    .btn-primary:hover { background: #6b5bdf; transform: scale(1.02); }
+    .btn-whatsapp {
+      background: var(--cta-whatsapp);
+      color: #fff;
+      box-shadow: 0 8px 24px -6px rgba(37, 211, 102, 0.35);
+    }
+    .btn-whatsapp:hover { background: #1da95a; transform: scale(1.02); }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.15);
+      color: var(--text-primary);
+    }
+    .btn-outline:hover { background: rgba(255,255,255,0.04); }
+    /* ----- LANGUAGE TOGGLE ----- */
+    .lang-toggle {
+      display: flex;
+      gap: 6px;
+      background: var(--bg-secondary);
+      border-radius: 40px;
+      padding: 6px;
+      border: 1px solid var(--border-glass);
+    }
+    .lang-toggle button {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-weight: 600;
+      font-size: 0.8rem;
+      padding: 6px 14px;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+    .lang-toggle button.active {
+      background: var(--cta-demo);
+      color: #fff;
+    }
+    /* ----- HEADER / NAV ----- */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 0;
+      flex-wrap: wrap;
+    }
+    .logo {
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      cursor: pointer;
+    }
+    .nav-links {
+      display: flex;
+      gap: 28px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+    .nav-links a:hover { color: #fff; }
+    .nav-links a.active { color: #fff; }
+    /* ----- PAGE SECTIONS (SPA) ----- */
+    .page-section {
+      display: none;
+      animation: fadeUp 0.5s ease;
+    }
+    .page-section.active { display: block; }
+    @keyframes fadeUp {
+      0% { opacity: 0; transform: translateY(20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    /* ----- HERO ----- */
+    .hero {
+      padding: 60px 0 80px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(2.5rem, 7vw, 4.8rem);
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 20px;
+    }
+    .hero h1 span {
+      background: linear-gradient(135deg, #c4b5fd, #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero p {
+      font-size: 1.3rem;
+      color: var(--text-secondary);
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+    .floating-dash {
+      margin-top: 60px;
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 30px 20px;
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      flex-wrap: wrap;
+      box-shadow: var(--shadow-glow);
+    }
+    .floating-dash span {
+      font-size: 0.9rem;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .floating-dash i { color: var(--text-accent); }
+    /* ----- SECTIONS COMMON ----- */
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.03);
+    }
+    .section-title {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--text-secondary);
+      font-size: 1.2rem;
+      max-width: 640px;
+      margin-bottom: 40px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      margin-top: 20px;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 24px;
+      margin-top: 20px;
+    }
+    .feature-card {
+      background: var(--bg-glass);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 28px 24px;
+      transition: var(--transition);
+    }
+    .feature-card:hover { background: rgba(255,255,255,0.06); }
+    .feature-card i {
+      font-size: 2rem;
+      color: var(--text-accent);
+      margin-bottom: 16px;
+    }
+    .feature-card h3 { font-size: 1.2rem; margin-bottom: 8px; }
+    .feature-card p { color: var(--text-secondary); font-size: 0.95rem; }
+    /* ----- PRICING ----- */
+    .pricing-box {
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-lg);
+      padding: 48px 40px;
+      text-align: center;
+    }
+    .pricing-box .price {
+      font-size: 3.5rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin: 20px 0 6px;
+    }
+    .pricing-box .price small {
+      font-size: 1.2rem;
+      font-weight: 400;
+      color: var(--text-secondary);
+    }
+    .pricing-box ul {
+      list-style: none;
+      margin: 30px 0;
+      text-align: left;
+    }
+    .pricing-box ul li {
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .pricing-box ul li i { color: var(--cta-whatsapp); }
+    /* ----- FAQ ----- */
+    .faq-item {
+      background: var(--bg-glass);
+      border: 1px solid var(--border-glass);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      margin-bottom: 16px;
+    }
+    .faq-item h4 { font-weight: 600; margin-bottom: 6px; }
+    .faq-item p { color: var(--text-secondary); }
+    /* ----- DEMO PAGE (lead capture + iframe) ----- */
+    .demo-container {
+      background: var(--bg-secondary);
+      border-radius: var(--radius-lg);
+      padding: 40px;
+      border: 1px solid var(--border-glass);
+    }
+    .demo-container input {
+      background: #1a1e26;
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: #fff;
+      width: 100%;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+    .demo-container input::placeholder { color: var(--text-secondary); }
+    .demo-iframe {
+      width: 100%;
+      height: 700px;
+      border: none;
+      border-radius: var(--radius-md);
+      background: #0b0d11;
+    }
+    /* ----- WHATSAPP FLOAT ----- */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--cta-whatsapp);
+      color: #fff;
+      width: 64px;
+      height: 64px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2.2rem;
+      box-shadow: 0 12px 32px -8px rgba(37, 211, 102, 0.4);
+      z-index: 999;
+      text-decoration: none;
+      transition: var(--transition);
+    }
+    .whatsapp-float:hover { transform: scale(1.08); }
+    @media (max-width: 600px) {
+      .whatsapp-float { width: 56px; height: 56px; font-size: 1.8rem; bottom: 20px; right: 20px; }
+      .demo-iframe { height: 400px; }
+    }
+    /* ----- FOOTER ----- */
+    .footer {
+      padding: 50px 0 30px;
+      border-top: 1px solid rgba(255,255,255,0.04);
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+    }
+    .footer a { color: var(--text-secondary); text-decoration: none; }
+    .footer a:hover { color: #fff; }
+    /* ----- RTL ----- */
+    [dir="rtl"] { text-align: right; }
+    [dir="rtl"] .nav-links { flex-direction: row-reverse; }
+    /* ----- RESPONSIVE ----- */
+    @media (max-width: 768px) {
+      .navbar { flex-direction: column; gap: 16px; }
+      .nav-links { justify-content: center; gap: 16px; }
+      .hero { padding: 30px 0 50px; }
+      .floating-dash { flex-direction: column; align-items: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating WhatsApp -->
+  <a href="https://wa.me/96170096064?text=Hello%20CedarPOS%20team%2C%20I'm%20interested%20in%20your%20POS%20system." class="whatsapp-float" target="_blank" rel="noopener" aria-label="Contact on WhatsApp">
+    <i class="fab fa-whatsapp"></i>
+  </a>
+
+  <div class="container">
+    <!-- ===== HEADER ===== -->
+    <header class="navbar">
+      <div class="logo" onclick="navigate('home')">CedarPOS</div>
+      <div class="nav-links">
+        <a class="active" onclick="navigate('home')">Home</a>
+        <a onclick="navigate('features')">Features</a>
+        <a onclick="navigate('pricing')">Pricing</a>
+        <a onclick="navigate('industries')">Industries</a>
+        <a onclick="navigate('demo')">Demo</a>
+        <a onclick="navigate('contact')">Contact</a>
+        <a onclick="navigate('about')">About</a>
+        <div class="lang-toggle">
+          <button class="active" onclick="setLang('en')">EN</button>
+          <button onclick="setLang('ar')">AR</button>
+        </div>
+        <a onclick="navigate('demo')" class="btn btn-primary" style="padding:10px 22px; font-size:0.9rem;"><i class="fas fa-play"></i> Try demo</a>
+      </div>
+    </header>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: HOME                                                    -->
+    <!-- ============================================================ -->
+    <div id="page-home" class="page-section active">
+      <!-- HERO -->
+      <section class="hero">
+        <h1>Stop losing money to outdated cash registers – <span>the POS built for Lebanon</span></h1>
+        <p>One‑time payment · Works offline · Arabic & English · Inventory · Debt tracking · Reports – everything you need to manage your business, not just ring up sales.</p>
+        <div class="hero-actions">
+          <a onclick="navigate('demo')" class="btn btn-primary"><i class="fas fa-play"></i> Try Live Demo</a>
+          <a href="https://wa.me/96170096064" class="btn btn-whatsapp" target="_blank"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          <a onclick="navigate('features')" class="btn btn-outline">See all features</a>
+        </div>
+        <div class="floating-dash">
+          <span><i class="fas fa-check-circle"></i> No subscription</span>
+          <span><i class="fas fa-wifi-slash"></i> Works offline</span>
+          <span><i class="fas fa-language"></i> EN / AR (RTL)</span>
+          <span><i class="fas fa-headset"></i> Local support</span>
+          <span><i class="fas fa-hand-holding-usd"></i> Debt tracking</span>
+        </div>
+      </section>
+
+      <!-- BUSINESS PROBLEMS -->
+      <section>
+        <div class="section-title">Lebanese businesses <span style="color:var(--text-accent);">struggle</span> with expensive subscriptions and unreliable software</div>
+        <div class="section-sub">CedarPOS was built from the ground up to solve the real problems you face every day.</div>
+        <div class="grid-2">
+          <div class="feature-card"><i class="fas fa-dollar-sign"></i><h3>No more monthly fees</h3><p>Pay $399 once – own it forever. No recurring charges that eat your profits.</p></div>
+          <div class="feature-card"><i class="fas fa-cloud-upload-alt"></i><h3>Internet cuts? Keep selling</h3><p>Full offline operation. Sales, inventory, and debt tracking work without internet.</p></div>
+          <div class="feature-card"><i class="fas fa-users"></i><h3>Multi‑user with permissions</h3><p>Train your staff, give each one the right access – no more confusion.</p></div>
+          <div class="feature-card"><i class="fas fa-hand-holding-usd"></i><h3>Stop chasing debts</h3><p>Track every customer's balance, send WhatsApp reminders, and collect faster.</p></div>
+        </div>
+      </section>
+
+      <!-- BENEFITS (FEATURES PREVIEW) -->
+      <section>
+        <div class="section-title">Everything you need to run your business – not just a cash register</div>
+        <div class="section-sub">CedarPOS is a complete business management system that happens to include a POS.</div>
+        <div class="grid-3">
+          <div class="feature-card"><i class="fas fa-boxes"></i><h3>Inventory that actually works</h3><p>Know your stock in real time, set low-stock alerts, and manage suppliers.</p></div>
+          <div class="feature-card"><i class="fas fa-barcode"></i><h3>Barcode scanner support</h3><p>Scan products instantly – no more typing prices manually.</p></div>
+          <div class="feature-card"><i class="fas fa-print"></i><h3>Professional receipts & invoices</h3><p>Print or send PDF invoices with dual currency and VAT breakdown.</p></div>
+          <div class="feature-card"><i class="fas fa-user-friends"></i><h3>Customer & debt management</h3><p>Track every customer's balance, purchase history, and send payment reminders.</p></div>
+          <div class="feature-card"><i class="fas fa-truck"></i><h3>Supplier & purchase orders</h3><p>Manage your suppliers, track orders, and know when to restock.</p></div>
+          <div class="feature-card"><i class="fas fa-chart-pie"></i><h3>Reports that matter</h3><p>Profit & loss, sales by product, tax reports – export for your accountant.</p></div>
+        </div>
+        <div style="text-align:center; margin-top:40px;">
+          <a onclick="navigate('features')" class="btn btn-primary">View all features <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </section>
+
+      <!-- SCREENSHOTS GALLERY (placeholder) -->
+      <section>
+        <div class="section-title">See CedarPOS in action</div>
+        <div class="section-sub">Clean, intuitive interface built for speed and clarity.</div>
+        <div style="display:flex; gap:20px; flex-wrap:wrap; margin-top:30px;">
+          <div style="flex:1; min-width:200px; background:var(--bg-secondary); border-radius:var(--radius-md); padding:30px; text-align:center; border:1px solid var(--border-glass);"><i class="fas fa-store" style="font-size:3rem; color:var(--text-accent);"></i><p style="margin-top:12px;">Point of Sale</p></div>
+          <div style="flex:1; min-width:200px; background:var(--bg-secondary); border-radius:var(--radius-md); padding:30px; text-align:center; border:1px solid var(--border-glass);"><i class="fas fa-chart-line" style="font-size:3rem; color:var(--text-accent);"></i><p style="margin-top:12px;">Analytics dashboard</p></div>
+          <div style="flex:1; min-width:200px; background:var(--bg-secondary); border-radius:var(--radius-md); padding:30px; text-align:center; border:1px solid var(--border-glass);"><i class="fas fa-credit-card" style="font-size:3rem; color:var(--text-accent);"></i><p style="margin-top:12px;">Customer debt view</p></div>
+        </div>
+      </section>
+
+      <!-- VIDEO DEMO (placeholder) -->
+      <section>
+        <div class="section-title">Watch a quick overview</div>
+        <div style="background:var(--bg-secondary); border-radius:var(--radius-lg); padding:40px; text-align:center; border:1px solid var(--border-glass);">
+          <i class="fas fa-play-circle" style="font-size:4rem; color:var(--text-accent);"></i>
+          <p style="margin-top:16px;">See how CedarPOS handles sales, inventory, and reporting in under 2 minutes.</p>
+          <a href="#" class="btn btn-primary" style="margin-top:20px;"><i class="fas fa-play"></i> Play video</a>
+        </div>
+      </section>
+
+      <!-- CORE FEATURES (detailed) -->
+      <section>
+        <div class="section-title">Built specifically for Lebanese retail</div>
+        <div class="grid-2">
+          <div class="feature-card"><i class="fas fa-hand-holding-usd"></i><h3>Debt & credit tracking</h3><p>Let customers buy on credit, track every Lira, and send WhatsApp reminders.</p></div>
+          <div class="feature-card"><i class="fas fa-coins"></i><h3>Expense & profit tracking</h3><p>Log rent, salaries, utilities – know your net profit at a glance.</p></div>
+          <div class="feature-card"><i class="fas fa-users-cog"></i><h3>Multi‑user with roles</h3><p>Cashiers, managers, admins – each with permissions tailored to their job.</p></div>
+          <div class="feature-card"><i class="fas fa-language"></i><h3>Arabic & English (RTL)</h3><p>Switch languages instantly – the entire interface supports right‑to‑left Arabic.</p></div>
+        </div>
+      </section>
+
+      <!-- INDUSTRIES (preview) -->
+      <section>
+        <div class="section-title">Serving 14+ industries</div>
+        <div class="grid-3">
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Supermarkets</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Restaurants</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Pharmacies</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Electronics</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Clothing</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Furniture</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Hardware</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">Cosmetics</span>
+          <span style="background:var(--bg-glass); padding:12px 20px; border-radius:40px; text-align:center;">+ more</span>
+        </div>
+        <div style="text-align:center; margin-top:30px;">
+          <a onclick="navigate('industries')" class="btn btn-outline">View all industries <i class="fas fa-arrow-right"></i></a>
+        </div>
+      </section>
+
+      <!-- TESTIMONIALS -->
+      <section>
+        <div class="section-title">Trusted by Lebanese business owners</div>
+        <div class="grid-2">
+          <div class="feature-card"><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><p style="margin-top:12px;">“We switched from a monthly subscription and saved over $600/year. CedarPOS is fast and the support is local.”</p><p style="color:var(--text-secondary);">— Ahmad, Mini Market in Beirut</p></div>
+          <div class="feature-card"><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><i class="fas fa-star" style="color:gold;"></i><p style="margin-top:12px;">“The debt tracking feature is a lifesaver – we finally know who owes what.”</p><p style="color:var(--text-secondary);">— Layla, Grocery in Tripoli</p></div>
+        </div>
+      </section>
+
+      <!-- PRICING (preview) -->
+      <section>
+        <div class="pricing-box">
+          <h2 style="font-size:1.8rem;">CedarPOS Professional</h2>
+          <div class="price">$399 <small>one‑time</small></div>
+          <p style="color:var(--text-secondary);">No subscription. Full ownership.</p>
+          <ul>
+            <li><i class="fas fa-check"></i> All core features</li>
+            <li><i class="fas fa-check"></i> Offline mode</li>
+            <li><i class="fas fa-check"></i> Bilingual (EN/AR) with RTL</li>
+            <li><i class="fas fa-check"></i> Multi‑user (unlimited)</li>
+            <li><i class="fas fa-check"></i> Free lifetime updates</li>
+          </ul>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center;">
+            <a onclick="navigate('demo')" class="btn btn-primary">Book a demo</a>
+            <a href="https://wa.me/96170096064" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          </div>
+          <p style="margin-top:20px; font-size:0.9rem; color:var(--text-secondary);">Optional: installation, training, support, custom development</p>
+        </div>
+      </section>
+
+      <!-- FAQ -->
+      <section>
+        <div class="section-title">Frequently asked questions</div>
+        <div class="faq-item"><h4>Is there a monthly fee?</h4><p>No. CedarPOS is a one‑time payment of $399. No hidden fees.</p></div>
+        <div class="faq-item"><h4>Does it work without internet?</h4><p>Yes, fully offline. Sales, inventory, and debt tracking work without any connection.</p></div>
+        <div class="faq-item"><h4>Can I switch between Arabic and English?</h4><p>Absolutely. One click changes the entire interface, with full RTL support.</p></div>
+        <div class="faq-item"><h4>What about support and training?</h4><p>We offer on‑site installation, training, and ongoing support as optional add‑ons.</p></div>
+      </section>
+
+      <!-- WHATSAPP CTA -->
+      <section style="text-align:center; border-bottom: none;">
+        <h2 style="font-size:2rem;">Ready to simplify your business?</h2>
+        <p style="color:var(--text-secondary); margin-bottom:30px;">Chat with us on WhatsApp or book a free demo.</p>
+        <a href="https://wa.me/96170096064" class="btn btn-whatsapp" style="font-size:1.2rem; padding:18px 40px;"><i class="fab fa-whatsapp"></i> Start WhatsApp conversation</a>
+      </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: FEATURES                                                -->
+    <!-- ============================================================ -->
+    <div id="page-features" class="page-section">
+      <section>
+        <div class="section-title">Full feature list</div>
+        <div class="section-sub">CedarPOS gives you everything you need to manage sales, inventory, customers, and finances – all in one desktop application.</div>
+        <div class="grid-2">
+          <div class="feature-card"><i class="fas fa-shopping-cart"></i><h3>Point of Sale</h3><p>Fast checkout with barcode search, quick keys, and category browsing.</p></div>
+          <div class="feature-card"><i class="fas fa-boxes"></i><h3>Inventory Management</h3><p>Track stock levels, set low‑stock alerts, manage variants and batches.</p></div>
+          <div class="feature-card"><i class="fas fa-barcode"></i><h3>Barcode Scanner Support</h3><p>Works with any USB barcode scanner for instant product lookup.</p></div>
+          <div class="feature-card"><i class="fas fa-print"></i><h3>Receipt & Invoice Printing</h3><p>Thermal and A4 receipts, customisable with your logo and message.</p></div>
+          <div class="feature-card"><i class="fas fa-users"></i><h3>Customer Management</h3><p>Store contact info, purchase history, and debt balances.</p></div>
+          <div class="feature-card"><i class="fas fa-hand-holding-usd"></i><h3>Debt & Credit Tracking</h3><p>Let customers buy on credit and track payments easily.</p></div>
+          <div class="feature-card"><i class="fas fa-truck"></i><h3>Supplier Management</h3><p>Manage supplier details, orders, and payment records.</p></div>
+          <div class="feature-card"><i class="fas fa-chart-pie"></i><h3>Reports & Analytics</h3><p>Sales reports, profit margins, expense summaries, and more.</p></div>
+          <div class="feature-card"><i class="fas fa-coins"></i><h3>Expense Tracking</h3><p>Log all business expenses (rent, salaries, utilities) to see net profit.</p></div>
+          <div class="feature-card"><i class="fas fa-users-cog"></i><h3>Multi‑User Access</h3><p>Unlimited users with role‑based permissions (admin, manager, cashier).</p></div>
+          <div class="feature-card"><i class="fas fa-language"></i><h3>Bilingual (Arabic/English)</h3><p>Switch languages instantly; full RTL support for Arabic.</p></div>
+          <div class="feature-card"><i class="fas fa-wifi-slash"></i><h3>Offline Mode</h3><p>No internet? Keep selling. Data syncs automatically when reconnected.</p></div>
+          <div class="feature-card"><i class="fas fa-whatsapp"></i><h3>WhatsApp Invoices</h3><p>Send receipts and invoices directly to customers via WhatsApp.</p></div>
+          <div class="feature-card"><i class="fas fa-database"></i><h3>Local Data Storage</h3><p>Your data stays on your computer – no cloud dependency (optional backup).</p></div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: PRICING                                                 -->
+    <!-- ============================================================ -->
+    <div id="page-pricing" class="page-section">
+      <section>
+        <div class="section-title">Simple, transparent pricing</div>
+        <div class="section-sub">One payment. Full ownership. No surprises.</div>
+        <div class="pricing-box" style="max-width:600px;">
+          <h2 style="font-size:2rem;">CedarPOS Professional</h2>
+          <div class="price">$399 <small>one‑time</small></div>
+          <p style="color:var(--text-secondary);">Includes all features. Lifetime updates.</p>
+          <ul>
+            <li><i class="fas fa-check"></i> Complete POS system</li>
+            <li><i class="fas fa-check"></i> Inventory & barcode</li>
+            <li><i class="fas fa-check"></i> Customer debt & supplier management</li>
+            <li><i class="fas fa-check"></i> Reports and analytics</li>
+            <li><i class="fas fa-check"></i> Multi‑user (unlimited)</li>
+            <li><i class="fas fa-check"></i> Arabic & English (RTL)</li>
+            <li><i class="fas fa-check"></i> Offline operation</li>
+            <li><i class="fas fa-check"></i> Free lifetime updates</li>
+          </ul>
+          <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:20px 0;">
+            <a onclick="navigate('demo')" class="btn btn-primary">Book a demo</a>
+            <a href="https://wa.me/96170096064" class="btn btn-whatsapp"><i class="fab fa-whatsapp"></i> WhatsApp</a>
+          </div>
+          <hr style="border-color:var(--border-glass); margin:30px 0;">
+          <h3 style="font-weight:600; margin-bottom:16px;">Optional Services</h3>
+          <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; text-align:left;">
+            <div><span style="color:var(--text-accent);">Installation</span> <span style="float:right;">$50</span></div>
+            <div><span style="color:var(--text-accent);">Training (on‑site)</span> <span style="float:right;">$50</span></div>
+            <div><span style="color:var(--text-accent);">Data Import</span> <span style="float:right;">$50‑150</span></div>
+            <div><span style="color:var(--text-accent);">Priority Support (annual)</span> <span style="float:right;">$99</span></div>
+            <div style="grid-column:1/-1;"><span style="color:var(--text-accent);">Custom Development</span> <span style="float:right;">Quoted</span></div>
+          </div>
+          <p style="margin-top:30px; color:var(--text-secondary); font-size:0.9rem;">Pay via OMT, Whish Money, Cash, or Bank Transfer.</p>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: INDUSTRIES                                              -->
+    <!-- ============================================================ -->
+    <div id="page-industries" class="page-section">
+      <section>
+        <div class="section-title">Built for your industry</div>
+        <div class="section-sub">CedarPOS adapts to the specific needs of different retail and hospitality businesses.</div>
+        <div class="grid-2" style="margin-top:20px;">
+          <div class="feature-card"><i class="fas fa-utensils"></i><h3>Restaurants & Cafes</h3><p>Table management, split bills, and fast order entry.</p></div>
+          <div class="feature-card"><i class="fas fa-store"></i><h3>Supermarkets & Groceries</h3><p>Bulk inventory, expiry dates, and customer debt.</p></div>
+          <div class="feature-card"><i class="fas fa-prescription-bottle"></i><h3>Pharmacies</h3><p>Batch tracking, expiry alerts, and prescription management.</p></div>
+          <div class="feature-card"><i class="fas fa-mobile-alt"></i><h3>Electronics & Mobile Shops</h3><p>Serial number tracking, warranty management.</p></div>
+          <div class="feature-card"><i class="fas fa-tshirt"></i><h3>Clothing & Fashion</h3><p>Size/color variants, customer preferences.</p></div>
+          <div class="feature-card"><i class="fas fa-couch"></i><h3>Furniture Stores</h3><p>Item dimensions, inventory of large items.</p></div>
+          <div class="feature-card"><i class="fas fa-wrench"></i><h3>Hardware Stores</h3><p>Heavy items, supplier management, project quotes.</p></div>
+          <div class="feature-card"><i class="fas fa-spa"></i><h3>Cosmetics & Beauty</h3><p>Batch tracking, loyalty programs.</p></div>
+          <div class="feature-card"><i class="fas fa-gift"></i><h3>Gift Shops</h3><p>Seasonal inventory, fast checkout.</p></div>
+          <div class="feature-card"><i class="fas fa-paw"></i><h3>Pet Shops</h3><p>Animal supplies, weight‑based pricing.</p></div>
+          <div class="feature-card"><i class="fas fa-gem"></i><h3>Jewelry Stores</h3><p>High‑value item tracking, customer history.</p></div>
+          <div class="feature-card"><i class="fas fa-book"></i><h3>Bookstores</h3><p>ISBN scanning, author/genre categorization.</p></div>
+        </div>
+        <p style="margin-top:40px; color:var(--text-secondary); text-align:center;">And many more – we tailor the system to your workflow.</p>
+      </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: DEMO (lead capture + iframe)                           -->
+    <!-- ============================================================ -->
+    <div id="page-demo" class="page-section">
+      <section>
+        <div class="section-title">Try CedarPOS live</div>
+        <div class="section-sub">Experience the software yourself. Fill in your details to access the interactive demo.</div>
+        <div class="demo-container">
+          <!-- Lead capture -->
+          <div id="demo-lead">
+            <p style="margin-bottom:20px; color:var(--text-secondary);">We’ll use your information to personalise your demo experience.</p>
+            <form id="demoForm" onsubmit="handleDemoAccess(event)">
+              <input type="text" id="demoName" placeholder="Your full name" required>
+              <input type="text" id="demoBusiness" placeholder="Business name" required>
+              <input type="tel" id="demoPhone" placeholder="Phone number (e.g., 03 123456)" required>
+              <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;"><i class="fas fa-rocket"></i> Launch Demo</button>
+            </form>
+          </div>
+          <!-- Demo iframe (hidden until form submitted) -->
+          <div id="demo-iframe-wrapper" style="display:none; margin-top:30px;">
+            <p style="margin-bottom:16px; color:var(--text-secondary);"><i class="fas fa-check-circle" style="color:var(--cta-whatsapp);"></i> Thank you! You can now use the full interactive demo below.</p>
+            <!-- === CHANGE THE src TO YOUR DEMO FILE URL === -->
+            <iframe class="demo-iframe" src="demo-app.html" title="CedarPOS Live Demo" allowfullscreen></iframe>
+            <p style="margin-top:12px; color:var(--text-secondary); font-size:0.9rem;">The demo runs in a sandbox. No data is saved.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: CONTACT                                                 -->
+    <!-- ============================================================ -->
+    <div id="page-contact" class="page-section">
+      <section>
+        <div class="section-title">Get in touch</div>
+        <div class="section-sub">We’re here to help you choose the right solution for your business.</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:40px; margin-top:30px;">
+          <div>
+            <div style="background:var(--bg-glass); border:1px solid var(--border-glass); border-radius:var(--radius-md); padding:30px; text-align:center;">
+              <i class="fab fa-whatsapp" style="font-size:3rem; color:var(--cta-whatsapp);"></i>
+              <h3 style="margin:16px 0 8px;">WhatsApp</h3>
+              <p style="color:var(--text-secondary);">Fastest response</p>
+              <a href="https://wa.me/96170096064" class="btn btn-whatsapp" style="margin-top:16px;"><i class="fab fa-whatsapp"></i> Chat now</a>
+            </div>
+            <div style="background:var(--bg-glass); border:1px solid var(--border-glass); border-radius:var(--radius-md); padding:30px; text-align:center; margin-top:20px;">
+              <i class="fas fa-phone-alt" style="font-size:2rem; color:var(--text-accent);"></i>
+              <h3 style="margin:16px 0 8px;">Phone</h3>
+              <p style="color:var(--text-secondary);">+961 70 096 064</p>
+            </div>
+            <div style="background:var(--bg-glass); border:1px solid var(--border-glass); border-radius:var(--radius-md); padding:30px; text-align:center; margin-top:20px;">
+              <i class="fas fa-envelope" style="font-size:2rem; color:var(--text-accent);"></i>
+              <h3 style="margin:16px 0 8px;">Email</h3>
+              <p style="color:var(--text-secondary);">info@cedarpos.com</p>
+            </div>
+          </div>
+          <div>
+            <div style="background:var(--bg-glass); border:1px solid var(--border-glass); border-radius:var(--radius-md); padding:30px;">
+              <h3 style="margin-bottom:20px;">Send a message</h3>
+              <form onsubmit="alert('Message sent! We’ll get back to you soon.'); return false;">
+                <input type="text" placeholder="Your name" style="width:100%; background:#1a1e26; border:1px solid var(--border-glass); border-radius:12px; padding:14px 18px; color:#fff; margin-bottom:16px;">
+                <input type="email" placeholder="Email address" style="width:100%; background:#1a1e26; border:1px solid var(--border-glass); border-radius:12px; padding:14px 18px; color:#fff; margin-bottom:16px;">
+                <input type="tel" placeholder="Phone number" style="width:100%; background:#1a1e26; border:1px solid var(--border-glass); border-radius:12px; padding:14px 18px; color:#fff; margin-bottom:16px;">
+                <textarea rows="4" placeholder="How can we help?" style="width:100%; background:#1a1e26; border:1px solid var(--border-glass); border-radius:12px; padding:14px 18px; color:#fff; margin-bottom:16px; font-family:inherit;"></textarea>
+                <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">Send message</button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: ABOUT                                                   -->
+    <!-- ============================================================ -->
+    <div id="page-about" class="page-section">
+      <section>
+        <div class="section-title">About CedarPOS</div>
+        <div class="section-sub">We’re a Lebanese team building software that actually works for local businesses.</div>
+        <div style="max-width:800px; margin:0 auto;">
+          <p style="color:var(--text-secondary); font-size:1.1rem; line-height:1.8;">CedarPOS was born from a simple observation: most POS systems are expensive, rely on internet, and are designed for markets far from Lebanon. We decided to change that.</p>
+          <p style="color:var(--text-secondary); font-size:1.1rem; line-height:1.8; margin-top:20px;">Our system is a one‑time purchase, works fully offline, supports Arabic and English, and includes all the features Lebanese business owners actually need – from debt tracking to WhatsApp invoices.</p>
+          <p style="color:var(--text-secondary); font-size:1.1rem; line-height:1.8; margin-top:20px;">We believe in transparency, simplicity, and local support. That’s why we offer installation, training, and direct assistance to every customer.</p>
+          <div style="display:flex; gap:30px; flex-wrap:wrap; margin-top:40px; justify-content:center;">
+            <div style="text-align:center;"><span style="font-size:2.5rem; font-weight:800; color:var(--text-accent);">50+</span><br>Businesses served</div>
+            <div style="text-align:center;"><span style="font-size:2.5rem; font-weight:800; color:var(--text-accent);">14</span><br>Industries covered</div>
+            <div style="text-align:center;"><span style="font-size:2.5rem; font-weight:800; color:var(--text-accent);">100%</span><br>Local support</div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FOOTER (appears on all pages)                                 -->
+    <!-- ============================================================ -->
+    <footer class="footer">
+      <div style="display:flex; flex-wrap:wrap; justify-content:space-between; gap:20px;">
+        <div><strong style="color:#fff;">CedarPOS</strong><br>Beirut · Lebanon</div>
+        <div>
+          <a onclick="navigate('home')">Home</a> ·
+          <a onclick="navigate('features')">Features</a> ·
+          <a onclick="navigate('pricing')">Pricing</a> ·
+          <a onclick="navigate('demo')">Demo</a> ·
+          <a onclick="navigate('contact')">Contact</a> ·
+          <a onclick="navigate('about')">About</a>
+        </div>
+        <div>© 2026 CedarPOS. All rights reserved.</div>
+      </div>
+    </footer>
+
+  </div> <!-- end container -->
+
+  <!-- ============================================================ -->
+  <!-- SCRIPTS                                                       -->
+  <!-- ============================================================ -->
+  <script>
+    // ----- NAVIGATION (SPA) -----
+    function navigate(page) {
+      document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+      const target = document.getElementById('page-' + page);
+      if (target) target.classList.add('active');
+      document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+      const navLinks = document.querySelectorAll('.nav-links a');
+      const pageMap = { 'home':0, 'features':1, 'pricing':2, 'industries':3, 'demo':4, 'contact':5, 'about':6 };
+      if (pageMap[page] !== undefined) navLinks[pageMap[page]].classList.add('active');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ----- LANGUAGE TOGGLE (simple content swap) -----
+    function setLang(lang) {
+      const html = document.documentElement;
+      const btns = document.querySelectorAll('.lang-toggle button');
+      btns.forEach(b => b.classList.remove('active'));
+      if (lang === 'ar') {
+        html.setAttribute('dir', 'rtl');
+        html.setAttribute('lang', 'ar');
+        btns[1].classList.add('active');
+        // Basic translation of key texts (demo only)
+        document.querySelector('.hero h1').innerHTML = 'توقف عن خسارة المال بأجهزة الكاشير القديمة – <span>نظام النقاط المصمم للبنان</span>';
+        document.querySelector('.hero p').textContent = 'دفعة واحدة · يعمل دون اتصال · العربية والإنجليزية · المخزون · تتبع الديون · التقارير – كل ما تحتاجه لإدارة عملك، وليس مجرد تسجيل المبيعات.';
+        // Update other visible titles (simplified)
+        document.querySelectorAll('.section-title').forEach(el => {
+          if (el.textContent.includes('struggle')) el.innerHTML = 'أصحاب الأعمال في لبنان <span style="color:var(--text-accent);">يعانون</span> من الاشتراكات الباهظة والبرامج غير الموثوقة';
+          else if (el.textContent.includes('Everything you need')) el.textContent = 'كل ما تحتاجه لإدارة عملك – وليس مجرد كاشير';
+          else if (el.textContent.includes('See CedarPOS in action')) el.textContent = 'شاهد CedarPOS أثناء العمل';
+          else if (el.textContent.includes('Watch a quick overview')) el.textContent = 'شاهد نظرة عامة سريعة';
+          else if (el.textContent.includes('Built specifically for Lebanese retail')) el.textContent = 'مصمم خصيصاً للبيع بالتجزئة في لبنان';
+          else if (el.textContent.includes('Serving 14+ industries')) el.textContent = 'يخدم أكثر من 14 قطاعاً';
+          else if (el.textContent.includes('Trusted by Lebanese business owners')) el.textContent = 'موثوق من قبل أصحاب الأعمال اللبنانيين';
+          else if (el.textContent.includes('Frequently asked questions')) el.textContent = 'الأسئلة الشائعة';
+          else if (el.textContent.includes('Ready to simplify')) el.textContent = 'هل أنت مستعد لتبسيط عملك؟';
+        });
+        // Pricing title
+        const pBox = document.querySelector('.pricing-box h2');
+        if (pBox) pBox.textContent = 'CedarPOS احترافي';
+        const priceSmall = document.querySelector('.pricing-box .price small');
+        if (priceSmall) priceSmall.textContent = 'دفعة واحدة';
+        // FAQ
+        const faqs = document.querySelectorAll('.faq-item');
+        if (faqs.length) {
+          faqs[0].querySelector('h4').textContent = 'هل هناك رسوم شهرية؟';
+          faqs[0].querySelector('p').textContent = 'لا. CedarPOS هو دفع واحد بقيمة 399 دولاراً. لا توجد رسوم خفية.';
+          faqs[1].querySelector('h4').textContent = 'هل يعمل بدون إنترنت؟';
+          faqs[1].querySelector('p').textContent = 'نعم، يعمل بشكل كامل دون اتصال. المبيعات والمخزون وتتبع الديون تعمل دون أي اتصال.';
+          faqs[2].querySelector('h4').textContent = 'هل يمكنني التبديل بين العربية والإنجليزية؟';
+          faqs[2].querySelector('p').textContent = 'بالتأكيد. نقرة واحدة تغير الواجهة بالكامل، مع دعم RTL.';
+          faqs[3].querySelector('h4').textContent = 'ماذا عن الدعم والتدريب؟';
+          faqs[3].querySelector('p').textContent = 'نقدم تركيباً وتدريباً ودعماً مستمراً كخدمات إضافية اختيارية.';
+        }
+        // Demo page
+        const demoTitle = document.querySelector('#page-demo .section-title');
+        if (demoTitle) demoTitle.textContent = 'جرب CedarPOS مباشرة';
+        const demoSub = document.querySelector('#page-demo .section-sub');
+        if (demoSub) demoSub.textContent = 'اختبر البرنامج بنفسك. املأ بياناتك للوصول إلى العرض التجريبي التفاعلي.';
+        // Contact
+        const contactTitle = document.querySelector('#page-contact .section-title');
+        if (contactTitle) contactTitle.textContent = 'تواصل معنا';
+        const contactSub = document.querySelector('#page-contact .section-sub');
+        if (contactSub) contactSub.textContent = 'نحن هنا لمساعدتك في اختيار الحل المناسب لعملك.';
+        // About
+        const aboutTitle = document.querySelector('#page-about .section-title');
+        if (aboutTitle) aboutTitle.textContent = 'عن CedarPOS';
+        const aboutSub = document.querySelector('#page-about .section-sub');
+        if (aboutSub) aboutSub.textContent = 'فريق لبناني يبني برامج تعمل فعلياً للشركات المحلية.';
+      } else {
+        html.setAttribute('dir', 'ltr');
+        html.setAttribute('lang', 'en');
+        btns[0].classList.add('active');
+        location.reload(); // Reset to English
+      }
+    }
+
+    // ----- DEMO LEAD CAPTURE -----
+    function handleDemoAccess(e) {
+      e.preventDefault();
+      const name = document.getElementById('demoName').value.trim();
+      const business = document.getElementById('demoBusiness').value.trim();
+      const phone = document.getElementById('demoPhone').value.trim();
+      if (name && business && phone) {
+        document.getElementById('demo-lead').style.display = 'none';
+        document.getElementById('demo-iframe-wrapper').style.display = 'block';
+        console.log('Lead captured:', { name, business, phone });
+        // You can send this data to your CRM or WhatsApp here
+      } else {
+        alert('Please fill in all fields.');
+      }
+    }
+
+    // ----- INIT: show home -----
+    navigate('home');
+  </script>
+
+</body>
+</html>
